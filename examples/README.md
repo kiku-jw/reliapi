@@ -272,7 +272,7 @@ Each example demonstrates:
 
 ## Additional Resources
 
-- [ReliAPI Documentation](https://github.com/KikuAI-Lab/reliapi/wiki)
+- [ReliAPI Documentation](https://github.com/kiku-jw/reliapi/wiki)
 - [RapidAPI ReliAPI Page](https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi)
 - [Integration Examples](../examples/integrations/README.md)
 - [Postman Collection](../postman/collection.json)

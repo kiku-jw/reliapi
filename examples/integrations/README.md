@@ -145,7 +145,7 @@ All examples support streaming. Just set `stream=True` in your LLM calls - ReliA
 
 ## Additional Resources
 
-- [ReliAPI Documentation](https://github.com/KikuAI-Lab/reliapi/wiki)
+- [ReliAPI Documentation](https://github.com/kiku-jw/reliapi/wiki)
 - [RapidAPI ReliAPI Page](https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi)
 - [LangChain Documentation](https://python.langchain.com/)
 - [LlamaIndex Documentation](https://docs.llamaindex.ai/)

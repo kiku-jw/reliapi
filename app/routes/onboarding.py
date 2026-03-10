@@ -141,7 +141,7 @@ console.log(data);''',
     return OnboardingResponse(
         api_key=api_key,
         quick_start_url=f"{RELIAPI_BASE_URL}/onboarding/quick-start",
-        documentation_url="https://github.com/KikuAI-Lab/reliapi/wiki",
+        documentation_url="https://github.com/kiku-jw/reliapi/wiki",
         example_code=example_code,
         integration_status="pending_verification",
     )

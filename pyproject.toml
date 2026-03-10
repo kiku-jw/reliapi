@@ -43,9 +43,9 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/KikuAI-Lab/reliapi"
+"Homepage" = "https://github.com/kiku-jw/reliapi"
 "Documentation" = "https://reliapi.kikuai.dev"
-"Bug Tracker" = "https://github.com/KikuAI-Lab/reliapi/issues"
+"Bug Tracker" = "https://github.com/kiku-jw/reliapi/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

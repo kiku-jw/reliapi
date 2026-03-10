@@ -111,7 +111,7 @@ Each endpoint includes automated tests that verify:
 
 ## Additional Resources
 
-- [ReliAPI Documentation](https://github.com/KikuAI-Lab/reliapi/wiki)
+- [ReliAPI Documentation](https://github.com/kiku-jw/reliapi/wiki)
 - [RapidAPI ReliAPI Page](https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi)
 - [OpenAPI Specification](../openapi/openapi.yaml)
 

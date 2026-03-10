@@ -74,7 +74,7 @@ docker run -d -p 8000:8000 \
 
 ```bash
 # Clone repository
-git clone https://github.com/KikuAI-Lab/reliapi.git
+git clone https://github.com/kiku-jw/reliapi.git
 cd reliapi
 
 # Create virtual environment
@@ -233,7 +233,7 @@ See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for production deployment guide.
 
 ## Support
 
-- GitHub Issues: https://github.com/KikuAI-Lab/reliapi/issues
+- GitHub Issues: https://github.com/kiku-jw/reliapi/issues
 - Email: dev@kikuai.dev
 
 ## License

@@ -206,12 +206,12 @@ const model = new ChatOpenAI({
 ## Additional Resources
 
 - [Flowise Documentation](https://docs.flowiseai.com/)
-- [ReliAPI Documentation](https://github.com/KikuAI-Lab/reliapi/wiki)
+- [ReliAPI Documentation](https://github.com/kiku-jw/reliapi/wiki)
 - [RapidAPI ReliAPI Page](https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi)
 
 ## Support
 
-- [GitHub Issues](https://github.com/KikuAI-Lab/reliapi/issues)
+- [GitHub Issues](https://github.com/kiku-jw/reliapi/issues)
 - [Email](mailto:dev@kikuai.dev)
 
 
