@@ -119,7 +119,7 @@ smoke_test_cli() {
     # Verify the CLI package can be built
     if command -v python3 &>/dev/null; then
         cd "$CLI_PATH"
-        if python3 -m build --wheel --no-isolation >/dev/null 2>&1; then
+        if python3 -m build --wheel >/dev/null 2>&1; then
             pass "CLI wheel build succeeded"
         else
             fail "CLI wheel build failed"
