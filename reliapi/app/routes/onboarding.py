@@ -11,6 +11,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel, EmailStr, Field
+import redis
 
 router = APIRouter(prefix="/onboarding", tags=["onboarding"])
 
@@ -38,7 +39,7 @@ class OnboardingResponse(BaseModel):
 class QuickStartGuide(BaseModel):
     """Quick start guide response."""
 
-    steps: list[Dict[str, str]]
+    steps: list[Dict[str, Any]]
     code_examples: Dict[str, str]
     test_endpoint: str
 
@@ -59,7 +60,6 @@ async def start_onboarding(request: OnboardingRequest) -> OnboardingResponse:
     api_key = f"reliapi_{secrets.token_urlsafe(32)}"
 
     # Store user account (in Redis or database)
-    import redis
     redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
 
     user_data = {
@@ -80,7 +80,7 @@ async def start_onboarding(request: OnboardingRequest) -> OnboardingResponse:
 
     # Generate quick start examples
     example_code = {
-        "python": f'''import httpx
+        "python": f"""import httpx
 
 # Your ReliAPI endpoint
 response = httpx.post(
@@ -101,8 +101,8 @@ response = httpx.post(
         }}
     }}
 )
-print(response.json())''',
-        "javascript": f'''const response = await fetch("https://reliapi.kikuai.dev/proxy/http", {{
+print(response.json())""",
+        "javascript": f"""const response = await fetch("https://reliapi.kikuai.dev/proxy/http", {{
     method: "POST",
     headers: {{
         "X-API-Key": "{api_key}",
@@ -121,8 +121,8 @@ print(response.json())''',
     }})
 }});
 const data = await response.json();
-console.log(data);''',
-        "curl": f'''curl -X POST "https://reliapi.kikuai.dev/proxy/http" \\
+console.log(data);""",
+        "curl": f"""curl -X POST "https://reliapi.kikuai.dev/proxy/http" \\
   -H "X-API-Key: {api_key}" \\
   -H "Content-Type: application/json" \\
   -d '{{
@@ -135,13 +135,13 @@ console.log(data);''',
       "model": "gpt-4o-mini",
       "messages": [{{"role": "user", "content": "Hello!"}}]
     }}
-  }}' ''',
+  }}' """,
     }
 
     return OnboardingResponse(
         api_key=api_key,
         quick_start_url=f"{RELIAPI_BASE_URL}/onboarding/quick-start",
-        documentation_url="https://github.com/kiku-jw/reliapi/wiki",
+        documentation_url="https://github.com/kiku-jw/reliapi",
         example_code=example_code,
         integration_status="pending_verification",
     )
@@ -197,9 +197,7 @@ async def verify_integration(
 
     Checks if user has made successful API calls and provides feedback.
     """
-    import redis
     from datetime import datetime, timedelta
-    import json
 
     redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
 
@@ -225,7 +223,9 @@ async def verify_integration(
     return {
         "status": verification_status,
         "requests_made": requests_count,
-        "message": "Integration verified!" if has_made_request else "Make your first API call to verify integration",
+        "message": "Integration verified!"
+        if has_made_request
+        else "Make your first API call to verify integration",
         "next_steps": [
             "Try the /proxy/http endpoint",
             "Check out the documentation",
@@ -237,4 +237,3 @@ async def verify_integration(
             "Check the /onboarding/quick-start guide",
         ],
     }
-

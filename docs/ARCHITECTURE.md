@@ -86,49 +86,23 @@ ReliAPI is a reliability layer for HTTP and LLM API calls. It provides:
 
 ```
 reliapi/
-├── app/                      # FastAPI application
-│   ├── main.py              # Application entry point
-│   ├── dependencies.py      # Shared dependencies and state
-│   ├── schemas.py           # Pydantic request/response models
-│   ├── services.py          # Business logic
-│   └── routes/              # Route handlers by domain
-│       ├── health.py        # Health check endpoints
-│       ├── proxy.py         # HTTP and LLM proxy endpoints
-│       ├── rapidapi.py      # RapidAPI integration
-│       └── ...              # Business routes
-├── core/                     # Core reliability components
-│   ├── cache.py             # Redis-based TTL cache
-│   ├── circuit_breaker.py   # Circuit breaker pattern
-│   ├── retry.py             # Retry engine with backoff
-│   ├── rate_limiter.py      # Multi-layer rate limiting
-│   ├── rate_scheduler.py    # Token bucket algorithm
-│   ├── idempotency.py       # Request coalescing
-│   ├── key_pool.py          # Provider key management
-│   ├── cost_estimator.py    # LLM cost calculation
-│   ├── client_profile.py    # Per-client constraints
-│   ├── security.py          # API key validation
-│   └── errors.py            # Error codes and normalization
-├── adapters/                 # Provider adapters
-│   ├── llm/                 # LLM provider implementations
-│   │   ├── base.py          # Abstract base class
-│   │   ├── openai.py        # OpenAI adapter
-│   │   ├── anthropic.py     # Anthropic adapter
-│   │   └── mistral.py       # Mistral adapter
-│   └── http_generic/        # Generic HTTP adapter
-├── config/                   # Configuration
-│   ├── loader.py            # YAML config loader
-│   └── schema.py            # Config schema
-├── integrations/             # External integrations
-│   ├── rapidapi.py          # RapidAPI tier detection
-│   └── routellm.py          # RouteLLM routing
-├── metrics/                  # Observability
-│   └── prometheus.py        # Prometheus metrics
+├── reliapi/                  # Importable package
+│   ├── app/                  # FastAPI application
+│   ├── core/                 # Core reliability components
+│   ├── adapters/             # Provider adapters
+│   ├── config/               # Configuration
+│   ├── integrations/         # External integrations
+│   └── metrics/              # Observability
+├── cli/                      # CLI package
+├── action/                   # GitHub Action
+├── scripts/                  # OpenAPI / SDK / release helpers
+├── sdk/                      # SDK templates and generated artifacts
 └── tests/                    # Test suite
 ```
 
 ## Core Components
 
-### 1. Cache (core/cache.py)
+### 1. Cache (`reliapi/core/cache.py`)
 
 Redis-backed TTL cache with multi-tenant isolation.
 
@@ -143,7 +117,7 @@ Redis-backed TTL cache with multi-tenant isolation.
 {prefix}:tenant:{tenant}:cache:{hash}
 ```
 
-### 2. Circuit Breaker (core/circuit_breaker.py)
+### 2. Circuit Breaker (`reliapi/core/circuit_breaker.py`)
 
 Prevents cascading failures using the circuit breaker pattern.
 
@@ -159,7 +133,7 @@ circuit_breaker:
   recovery_timeout: 30
 ```
 
-### 3. Retry Engine (core/retry.py)
+### 3. Retry Engine (`reliapi/core/retry.py`)
 
 Exponential backoff retry with customizable policies.
 
@@ -172,7 +146,7 @@ retry:
   network: {retries: 2, backoff: 1.0}
 ```
 
-### 4. Rate Limiter (core/rate_limiter.py)
+### 4. Rate Limiter (`reliapi/core/rate_limiter.py`)
 
 Multi-layer rate limiting with abuse detection.
 
@@ -183,7 +157,7 @@ Multi-layer rate limiting with abuse detection.
 4. Anomaly detection
 5. Auto-ban for repeated violations
 
-### 5. Idempotency Manager (core/idempotency.py)
+### 5. Idempotency Manager (`reliapi/core/idempotency.py`)
 
 Request coalescing with Redis SETNX.
 
@@ -192,7 +166,7 @@ Request coalescing with Redis SETNX.
 - In-progress locking
 - Result caching with TTL
 
-### 6. Key Pool Manager (core/key_pool.py)
+### 6. Key Pool Manager (`reliapi/core/key_pool.py`)
 
 Multi-key rotation for LLM providers.
 

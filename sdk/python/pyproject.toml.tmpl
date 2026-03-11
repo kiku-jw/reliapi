@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "{{PYPI_PACKAGE}}"
+version = "{{PRODUCT_VERSION}}"
+description = "Python SDK for {{PRODUCT_NAME}} - Reliability layer for API calls"
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [
+    {name = "KikuAI-Lab", email = "dev@kikuai.dev"}
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "httpx>=0.26.0",
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/kiku-jw/{{PRODUCT_NAME}}"
+"Bug Tracker" = "https://github.com/kiku-jw/{{PRODUCT_NAME}}/issues"
+"Documentation" = "https://reliapi.kikuai.dev"
+
+[tool.setuptools.packages.find]
+where = ["."]

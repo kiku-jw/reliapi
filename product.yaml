@@ -1,0 +1,31 @@
+product:
+  name: reliapi
+  display_name: ReliAPI
+  description: "Reliability layer for API calls: retries, caching, dedup, circuit breakers, LLM proxy with cost control."
+  owner: KikuAI-Lab
+  version: 1.1.0
+repos:
+  public: kiku-jw/reliapi
+versioning:
+  scheme: semver
+  tag_prefix: v
+openapi:
+  source: fastapi
+  app_import: reliapi.app.main:app
+  output: openapi/openapi.yaml
+packages:
+  npm:
+    name: reliapi-sdk
+    path: sdk/js
+  pypi:
+    name: reliapi-sdk
+    path: sdk/python
+docker:
+  image: kikudoc/reliapi
+  context: .
+  dockerfile: Dockerfile
+postman:
+  output: postman/collection.json
+cli:
+  bin_name: reli
+  package_name: reliapi-cli

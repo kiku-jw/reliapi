@@ -1,0 +1,80 @@
+name: Release Assets
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          npm install -g @openapitools/openapi-generator-cli openapi-to-postmanv2
+
+      - name: Generate OpenAPI
+        run: python scripts/generate_openapi.py
+
+      - name: Generate Postman collection
+        run: bash scripts/generate_postman.sh || echo "Postman generation failed, continuing..."
+
+      - name: Get product info
+        id: product
+        run: |
+          NAME=$(python3 -c "import yaml; print(yaml.safe_load(open('product.yaml'))['product']['display_name'])")
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "NAME=$NAME" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create release archive
+        run: |
+          mkdir -p release-assets
+          cp openapi/openapi.yaml release-assets/ 2>/dev/null || true
+          cp openapi/openapi.json release-assets/ 2>/dev/null || true
+          cp postman/collection.json release-assets/ 2>/dev/null || true
+          cd release-assets && zip -r ../release-${{ steps.product.outputs.VERSION }}.zip . && cd ..
+
+      - name: Extract changelog for release
+        id: changelog
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            # Extract changelog section for this version
+            awk '/^## \['"${{ steps.product.outputs.VERSION }}"'\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md > release-notes.md
+            if [ ! -s release-notes.md ]; then
+              echo "Release ${{ steps.product.outputs.VERSION }}" > release-notes.md
+            fi
+          else
+            echo "Release ${{ steps.product.outputs.VERSION }}" > release-notes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.product.outputs.NAME }} v${{ steps.product.outputs.VERSION }}
+          body_path: release-notes.md
+          files: |
+            release-${{ steps.product.outputs.VERSION }}.zip
+            openapi/openapi.yaml
+            openapi/openapi.json
+            postman/collection.json
+          draft: false
+          prerelease: false

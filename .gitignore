@@ -51,6 +51,8 @@ Thumbs.db
 .coverage
 htmlcov/
 .tox/
+.mypy_cache/
+.ruff_cache/
 
 # Secrets
 *.key
@@ -64,6 +66,16 @@ secrets/
 tmp/
 temp/
 *.tmp
+
+# Generated tooling artifacts
+.openapi-generator/
+sdk/js/node_modules/
+sdk/js/dist/
+sdk/js/src/
+sdk/python/build/
+sdk/python/dist/
+sdk/python/reliapi_sdk/
+rapidapi-pack/
 
 # Legacy/temporary directories
 api-template-ref/

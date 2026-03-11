@@ -14,6 +14,7 @@ from fastapi.responses import Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
+from reliapi import __version__
 from reliapi.app.dependencies import get_app_state
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ class HealthResponse(BaseModel):
     """Health check response model."""
 
     status: str
-    version: str = "1.0.7"
+    version: str = __version__
 
 
 class StatusResponse(BaseModel):

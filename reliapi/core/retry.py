@@ -1,7 +1,9 @@
 """Retry engine with exponential backoff and jitter."""
 import asyncio
+import math
 import random
 import time
+from email.utils import parsedate_to_datetime
 from typing import Any, Callable, Dict, Optional, TypeVar
 
 T = TypeVar("T")
@@ -31,18 +33,18 @@ class RetryMatrix:
 
     def get_delay(self, attempt: int, retry_after: Optional[float] = None) -> float:
         """Calculate delay for retry attempt.
-        
+
         Args:
             attempt: Retry attempt number (1-based)
             retry_after: Retry-After header value in seconds (if present)
-            
+
         Returns:
             Delay in seconds
         """
         # If Retry-After header is present, use it (capped at max_s)
         if retry_after is not None:
             return min(retry_after, self.max_s)
-        
+
         # Otherwise use configured backoff strategy
         if self.backoff == "exp-jitter":
             delay = self.base_s * (2 ** (attempt - 1))
@@ -74,6 +76,26 @@ class RetryEngine:
             "timeout": RetryMatrix(attempts=2, backoff="exp-jitter", base_s=1.0),
         }
 
+    @staticmethod
+    def _parse_retry_after_header(retry_after_header: str) -> Optional[float]:
+        """Parse Retry-After header value.
+
+        Supports both integer-second and HTTP-date formats. For HTTP-date values
+        we round up to the next second to avoid retrying too early because of
+        second-level timestamp precision.
+        """
+        try:
+            return float(retry_after_header)
+        except ValueError:
+            try:
+                retry_after_dt = parsedate_to_datetime(retry_after_header)
+                delay = retry_after_dt.timestamp() - time.time()
+                if delay <= 0:
+                    return 0.0
+                return float(math.ceil(delay))
+            except (TypeError, ValueError, OverflowError):
+                return None
+
     def _classify_error(self, status_code: Optional[int], error: Optional[Exception]) -> str:
         """Classify error for retry policy selection."""
         if error:
@@ -100,15 +122,15 @@ class RetryEngine:
     ) -> T:
         """
         Execute function with retries.
-        
+
         Args:
             func: Async function to execute (should return (status_code, result) or raise)
             error_classifier: Optional custom error classifier
             get_retry_after: Optional function to extract Retry-After from exception
-            
+
         Returns:
             Result from function
-            
+
         Raises:
             Last exception if all retries exhausted
         """
@@ -140,14 +162,17 @@ class RetryEngine:
                 retry_after = None
                 if get_retry_after:
                     retry_after = get_retry_after(e)
-                elif hasattr(e, "response") and hasattr(e.response, "headers"):
-                    # Try to parse Retry-After from response headers
+
+                if hasattr(e, "response") and hasattr(e.response, "headers"):
                     retry_after_str = e.response.headers.get("Retry-After")
                     if retry_after_str:
-                        try:
-                            retry_after = float(retry_after_str)
-                        except ValueError:
-                            pass
+                        parsed_retry_after = self._parse_retry_after_header(retry_after_str)
+                        if parsed_retry_after is not None:
+                            retry_after = (
+                                parsed_retry_after
+                                if retry_after is None
+                                else max(retry_after, parsed_retry_after)
+                            )
 
                 # Calculate delay
                 delay = policy.get_delay(attempt, retry_after=retry_after)
@@ -157,5 +182,3 @@ class RetryEngine:
         if last_error:
             raise last_error
         raise RuntimeError("Retry exhausted without result")
-
-

@@ -1,0 +1,40 @@
+ReliAPI is a reliability layer (proxy/gateway) for both HTTP APIs and LLM providers. It helps developers ship production-grade integrations by adding the stuff everyone re-implements at 2 a.m.: retries, circuit breaking, caching, idempotency, rate-limit smoothing, and standardized error handling.
+
+What ReliAPI does
+
+Smart Retries: automatic retries with exponential backoff (and respectful handling of Retry-After when present).
+
+Circuit Breaker: prevents cascading failures when an upstream is unhealthy.
+
+Caching (TTL): reduces latency and cost by caching safe responses (configurable).
+
+Idempotency / Request Coalescing: prevents duplicate work and duplicate charges during retries or concurrent requests.
+
+Rate Limit Protection (Stability Shield): smooths bursts and reduces upstream 429/5xx pain.
+
+Unified Errors & Metadata: consistent error format and optional response metadata for observability.
+
+Works with HTTP + LLM: use it as a single gateway for OpenAI/Anthropic/Mistral-style APIs and regular REST APIs (payments, SaaS, microservices, etc.).
+
+Typical use cases
+
+LLM Proxy: protect your app from rate limits, transient failures, and "surprise bills" patterns.
+
+HTTP Gateway: make external API integrations resilient without littering your codebase with retry logic.
+
+Payments & critical workflows: use idempotency to reduce accidental double-submits and duplicate operations.
+
+Multi-tenant apps: apply per-tenant policies (limits, caching rules, idempotency windows) consistently.
+
+How it fits in your stack
+
+Client → ReliAPI → Upstream API (LLM provider or any HTTP API)
+
+You keep your existing client code and route requests through ReliAPI. You can start minimal (retries + circuit breaker) and progressively enable features like caching and idempotency.
+
+Notes
+
+ReliAPI is designed for BYO-Key workflows: you remain responsible for your upstream provider credentials and usage.
+
+Reliability features and limits depend on your selected plan and any configured policies.
+

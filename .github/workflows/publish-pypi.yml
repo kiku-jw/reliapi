@@ -1,0 +1,76 @@
+name: Publish PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check PYPI_TOKEN
+        id: check-token
+        run: |
+          if [ -z "${{ secrets.PYPI_TOKEN }}" ]; then
+            echo "PYPI_TOKEN not set, skipping publish"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.check-token.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Node.js
+        if: steps.check-token.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Java
+        if: steps.check-token.outputs.skip != 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        if: steps.check-token.outputs.skip != 'true'
+        run: |
+          pip install -r requirements-dev.txt
+          pip install --upgrade build "twine>=5.0.0"
+
+      - name: Generate OpenAPI
+        if: steps.check-token.outputs.skip != 'true'
+        run: python scripts/generate_openapi.py
+
+      - name: Generate Python SDK
+        if: steps.check-token.outputs.skip != 'true'
+        run: |
+          npm install -g @openapitools/openapi-generator-cli || true
+          bash scripts/generate_sdk.sh python
+
+      - name: Build SDK
+        if: steps.check-token.outputs.skip != 'true'
+        working-directory: sdk/python
+        run: python -m build
+
+      - name: Publish to PyPI
+        if: steps.check-token.outputs.skip != 'true'
+        working-directory: sdk/python
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload dist/*
+
+      - name: Skip notice
+        if: steps.check-token.outputs.skip == 'true'
+        run: echo "::notice::PyPI publish skipped - PYPI_TOKEN not configured"

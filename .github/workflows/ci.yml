@@ -2,33 +2,105 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
-    
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        cd deepstabilizer && pip install -r requirements.txt
-        cd ../llm-router && pip install -r requirements.txt
-    
-    - name: Run DeepStabilizer tests
-      run: |
-        cd deepstabilizer
-        pytest tests/ -v || true
-    
-    - name: Run LLM-Router tests
-      run: |
-        cd llm-router
-        pytest tests/ -v || true
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-dev.txt
+          npm install -g @openapitools/openapi-generator-cli openapi-to-postmanv2
+
+      - name: Lint
+        run: make lint
+
+      - name: Targeted regression tests
+        env:
+          REDIS_URL: redis://localhost:6379/0
+          RELIAPI_STRICT_CONFIG: "false"
+        run: |
+          pytest tests/test_free_tier_restrictions.py tests/test_routes_business.py tests/test_llm_proxy.py -q
+
+      - name: Generate OpenAPI
+        run: python3 scripts/generate_openapi.py
+
+      - name: Validate OpenAPI
+        run: make verify-openapi
+
+      - name: Build Python package
+        run: python3 -m build
+
+      - name: Tooling smoke tests
+        run: |
+          bash scripts/smoke_test.sh cli
+          bash scripts/smoke_test.sh action
+
+  docker-smoke:
+    name: Docker Smoke
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -f Dockerfile -t reliapi-ci .
+
+      - name: Start Redis
+        run: docker run -d --name redis -p 6379:6379 redis:7-alpine
+
+      - name: Run container
+        run: |
+          docker run -d --name reliapi \
+            --add-host=host.docker.internal:host-gateway \
+            -e REDIS_URL=redis://host.docker.internal:6379/0 \
+            -e RELIAPI_STRICT_CONFIG=false \
+            -e RELIAPI_CONFIG_PATH=/app/config.yaml \
+            -p 8000:8000 reliapi-ci
+          for i in {1..20}; do
+            if curl -sf http://localhost:8000/healthz >/dev/null; then
+              exit 0
+            fi
+            sleep 3
+          done
+          docker logs reliapi
+          exit 1
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop reliapi >/dev/null 2>&1 || true
+          docker rm reliapi >/dev/null 2>&1 || true
+          docker stop redis >/dev/null 2>&1 || true
+          docker rm redis >/dev/null 2>&1 || true

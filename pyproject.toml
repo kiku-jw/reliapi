@@ -7,7 +7,8 @@ name = "reliapi"
 version = "1.1.0"
 description = "Reliability layer for API calls: retries, caching, dedup, circuit breakers, LLM proxy with cost control."
 readme = "README.md"
-license = {text = "MIT"}
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [
     {name = "KikuAI-Lab", email = "dev@kikuai.dev"}
 ]
@@ -15,7 +16,6 @@ requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -24,7 +24,7 @@ classifiers = [
 dependencies = [
     "fastapi>=0.109.0",
     "uvicorn[standard]>=0.27.0",
-    "pydantic>=2.5.0",
+    "pydantic[email]>=2.5.0",
     "pydantic-settings>=2.1.0",
     "httpx>=0.26.0",
     "PyYAML>=6.0.1",
@@ -54,6 +54,8 @@ include = ["reliapi*"]
 [tool.ruff]
 target-version = "py311"
 line-length = 100
+
+[tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "C4", "UP"]
 ignore = ["E501", "B008"]
 

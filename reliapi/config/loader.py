@@ -1,7 +1,8 @@
 """YAML configuration loader for routes-based ReliAPI."""
-import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+import yaml
 
 from reliapi.config.schema import ReliAPIConfig
 
@@ -16,27 +17,44 @@ class ConfigLoader:
         """
         self.config_path = Path(config_path)
         self.config: Dict[str, Any] = {}
+        self.model: Optional[ReliAPIConfig] = None
 
-    def load(self) -> Dict[str, Any]:
+    def _normalize_tenants(self, raw_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize tenants to the dict form expected by the schema."""
+        tenants = raw_config.get("tenants")
+        if isinstance(tenants, list):
+            normalized_tenants: Dict[str, Any] = {}
+            for tenant in tenants:
+                if not isinstance(tenant, dict):
+                    continue
+                tenant_name = tenant.get("name")
+                if not tenant_name:
+                    raise ValueError("Each tenant entry must include a name")
+                normalized_tenants[tenant_name] = tenant
+            raw_config["tenants"] = normalized_tenants
+        return raw_config
+
+    def load(self) -> ReliAPIConfig:
         """Load and validate configuration from YAML file."""
-        if not self.config_path.exists():
-            raise FileNotFoundError(f"Config file not found: {self.config_path}")
-
         try:
             with open(self.config_path, "r") as f:
-                raw_config = yaml.safe_load(f) or {}
+                raw_config = yaml.safe_load(f.read()) or {}
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Config file not found: {self.config_path}") from e
         except yaml.YAMLError as e:
             raise ValueError(f"Invalid YAML syntax in {self.config_path}: {e}") from e
 
+        raw_config = self._normalize_tenants(raw_config)
+
         # Validate through Pydantic
         try:
-            validated_config = ReliAPIConfig(**raw_config)
+            self.model = ReliAPIConfig(**raw_config)
             # Convert back to dict for compatibility
-            self.config = validated_config.model_dump(exclude_none=True)
+            self.config = self.model.model_dump(exclude_none=True)
         except Exception as e:
             raise ValueError(f"Configuration validation failed in {self.config_path}: {e}") from e
 
-        return self.config
+        return self.model
 
     def get_targets(self) -> Dict[str, Dict[str, Any]]:
         """Get targets configuration (new schema)."""
@@ -53,32 +71,39 @@ class ConfigLoader:
     def get_target(self, name: str) -> Optional[Dict[str, Any]]:
         """Get specific target configuration."""
         return self.get_targets().get(name)
-    
+
     def get_tenants(self) -> Optional[Dict[str, Any]]:
         """Get tenants configuration."""
+        if self.model:
+            return self.model.tenants
         return self.config.get("tenants")
-    
-    def get_tenant(self, tenant_name: str) -> Optional[Dict[str, Any]]:
+
+    def get_tenant(self, tenant_name: str) -> Optional[Any]:
         """Get specific tenant configuration."""
         tenants = self.get_tenants()
         if not tenants:
             return None
         return tenants.get(tenant_name)
-    
-    def find_tenant_by_api_key(self, api_key: str) -> Optional[str]:
+
+    def find_tenant_by_api_key(self, api_key: str) -> Optional[Any]:
         """Find tenant name by API key.
-        
+
         Returns:
-            Tenant name if found, None otherwise
+            Tenant config if found, None otherwise
         """
         tenants = self.get_tenants()
         if not tenants:
             return None
-        
-        for tenant_name, tenant_config in tenants.items():
-            if tenant_config.get("api_key") == api_key:
-                return tenant_name
-        
+
+        for tenant_config in tenants.values():
+            tenant_api_key = (
+                tenant_config.api_key
+                if hasattr(tenant_config, "api_key")
+                else tenant_config.get("api_key")
+            )
+            if tenant_api_key == api_key:
+                return tenant_config
+
         return None
 
     def get_provider_key_pools(self) -> Optional[Dict[str, Any]]:
@@ -93,16 +118,14 @@ class ConfigLoader:
         """Get specific upstream configuration (legacy)."""
         return self.get_target(name) or self.get_upstreams().get(name)
 
-    def find_route(
-        self, method: str, path: str
-    ) -> Optional[Dict[str, Any]]:
+    def find_route(self, method: str, path: str) -> Optional[Dict[str, Any]]:
         """
         Find matching route for method and path.
-        
+
         Args:
             method: HTTP method
             path: Request path
-            
+
         Returns:
             Route configuration or None
         """
@@ -132,9 +155,8 @@ class ConfigLoader:
         # Support * single segment wildcard
         if "*" in route_path:
             import re
+
             pattern = route_path.replace("*", "[^/]+")
             return bool(re.match(pattern, request_path))
 
         return False
-
-

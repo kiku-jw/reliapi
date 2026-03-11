@@ -2,29 +2,48 @@ openapi: 3.1.0
 info:
   title: ReliAPI
   description: 'Reliability layer for API calls: retries, caching, dedup, circuit
-    breakers.'
-  version: 1.0.1
+    breakers, LLM proxy with cost control.'
+  version: 1.1.0
   contact:
     name: KikuAI-Lab
-    url: https://github.com/kikuai-lab/reliapi
+    url: https://github.com/kiku-jw/reliapi
     email: dev@kikuai.dev
   license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+    name: AGPL-3.0-only
+    url: https://www.gnu.org/licenses/agpl-3.0.html
 paths:
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Health Check
+      description: Basic health check endpoint for load balancers and monitoring.
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
   /healthz:
     get:
+      tags:
+      - Health
       summary: Healthz
-      description: Health check endpoint with optional rate limiting.
+      description: Kubernetes-style health check endpoint with optional rate limiting.
       operationId: healthz_healthz_get
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
   /readyz:
     get:
+      tags:
+      - Health
       summary: Readyz
       description: Readiness check endpoint with optional rate limiting.
       operationId: readyz_readyz_get
@@ -33,9 +52,12 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
   /livez:
     get:
+      tags:
+      - Health
       summary: Livez
       description: Liveness check endpoint with optional rate limiting.
       operationId: livez_livez_get
@@ -44,9 +66,12 @@ paths:
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
   /metrics:
     get:
+      tags:
+      - Health
       summary: Metrics
       description: Prometheus metrics endpoint with rate limiting.
       operationId: metrics_metrics_get
@@ -56,8 +81,78 @@ paths:
           content:
             application/json:
               schema: {}
+  /v1/proxy/http:
+    post:
+      tags:
+      - Proxy
+      summary: Proxy HTTP request
+      description: Universal HTTP proxy endpoint for any HTTP API. Supports retries,
+        circuit breaker, cache, and idempotency. Use this endpoint to add reliability
+        layers to any HTTP API call.
+      operationId: proxy_http_v1_proxy_http_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPProxyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/proxy/llm:
+    post:
+      tags:
+      - Proxy
+      summary: Proxy LLM request
+      description: LLM proxy endpoint with idempotency, budget caps, and caching.
+        Make idempotent LLM API calls with predictable costs. Supports OpenAI, Anthropic,
+        and Mistral providers. Set stream=true for Server-Sent Events (SSE) streaming.
+      operationId: proxy_llm_v1_proxy_llm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMProxyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rapidapi/status:
+    get:
+      tags:
+      - RapidAPI
+      summary: RapidAPI Integration Status
+      description: Check the status of RapidAPI integration.
+      operationId: rapidapi_status_v1_rapidapi_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
   /proxy/http:
     post:
+      tags:
+      - Legacy
+      - Proxy
       summary: Proxy HTTP request
       description: Universal HTTP proxy endpoint for any HTTP API. Supports retries,
         circuit breaker, cache, and idempotency. Use this endpoint to add reliability
@@ -81,8 +176,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+      deprecated: true
   /proxy/llm:
     post:
+      tags:
+      - Legacy
+      - Proxy
       summary: Proxy LLM request
       description: LLM proxy endpoint with idempotency, budget caps, and caching.
         Make idempotent LLM API calls with predictable costs. Supports OpenAI, Anthropic,
@@ -106,8 +205,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+      deprecated: true
   /rapidapi/status:
     get:
+      tags:
+      - Legacy
+      - RapidAPI
       summary: RapidAPI Integration Status
       description: Check the status of RapidAPI integration.
       operationId: rapidapi_status_rapidapi_status_get
@@ -117,8 +220,669 @@ paths:
           content:
             application/json:
               schema: {}
+      deprecated: true
+  /paddle/checkout:
+    post:
+      tags:
+      - paddle
+      summary: Create Checkout
+      description: 'Create a Paddle checkout session for subscription.
+
+
+        This endpoint creates a checkout session through Paddle API.
+
+        Returns checkout URL that user can redirect to.'
+      operationId: create_checkout_paddle_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Checkout Paddle Checkout Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /paddle/subscription/{subscription_id}:
+    get:
+      tags:
+      - paddle
+      summary: Get Subscription
+      description: 'Get subscription status from Paddle.
+
+
+        Fetches subscription details from Paddle API.'
+      operationId: get_subscription_paddle_subscription__subscription_id__get
+      parameters:
+      - name: subscription_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Subscription Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionStatus'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /paddle/webhook:
+    post:
+      tags:
+      - paddle
+      summary: Paddle Webhook
+      description: 'Handle Paddle webhook events.
+
+
+        Processes webhook events from Paddle:
+
+        - subscription.created
+
+        - subscription.updated
+
+        - subscription.cancelled
+
+        - transaction.completed
+
+        - transaction.payment_failed
+
+
+        All events are processed automatically without manual intervention.'
+      operationId: paddle_webhook_paddle_webhook_post
+      parameters:
+      - name: Paddle-Signature
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Paddle-Signature
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                title: Response Paddle Webhook Paddle Webhook Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /paddle/plans:
+    get:
+      tags:
+      - paddle
+      summary: List Plans
+      description: 'List available subscription plans.
+
+
+        Returns list of subscription plans configured in Paddle.'
+      operationId: list_plans_paddle_plans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SubscriptionPlan'
+                type: array
+                title: Response List Plans Paddle Plans Get
+  /onboarding/start:
+    post:
+      tags:
+      - onboarding
+      summary: Start Onboarding
+      description: 'Start self-service onboarding for a new user.
+
+
+        This endpoint:
+
+        1. Generates API key automatically
+
+        2. Creates user account
+
+        3. Returns quick start guide and examples
+
+        4. Provides integration verification endpoint
+
+
+        All steps are automated - no manual intervention required.'
+      operationId: start_onboarding_onboarding_start_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnboardingRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /onboarding/quick-start:
+    get:
+      tags:
+      - onboarding
+      summary: Get Quick Start Guide
+      description: 'Get quick start guide for onboarding.
+
+
+        Returns step-by-step guide with code examples.'
+      operationId: get_quick_start_guide_onboarding_quick_start_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuickStartGuide'
+  /onboarding/verify:
+    post:
+      tags:
+      - onboarding
+      summary: Verify Integration
+      description: 'Verify user integration.
+
+
+        Checks if user has made successful API calls and provides feedback.'
+      operationId: verify_integration_onboarding_verify_post
+      parameters:
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Verify Integration Onboarding Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/track:
+    post:
+      tags:
+      - analytics
+      summary: Track Event
+      description: 'Track analytics event.
+
+
+        Automatically sends event to configured analytics providers:
+
+        - Google Analytics (if configured)
+
+        - Mixpanel (if configured)
+
+        - PostHog (if configured)
+
+
+        All tracking is automated - no manual intervention required.'
+      operationId: track_event_analytics_track_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Track Event Analytics Track Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/conversion:
+    post:
+      tags:
+      - analytics
+      summary: Track Conversion
+      description: 'Track conversion event.
+
+
+        Tracks conversion events in the funnel:
+
+        - Visitor → Trial → Paid
+
+
+        All tracking is automated.'
+      operationId: track_conversion_analytics_conversion_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionEvent'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Track Conversion Analytics Conversion Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /analytics/funnel:
+    get:
+      tags:
+      - analytics
+      summary: Get Conversion Funnel
+      description: 'Get conversion funnel metrics.
+
+
+        Returns conversion funnel data:
+
+        - Visitors
+
+        - Trial signups
+
+        - Paid conversions
+
+        - Conversion rates
+
+
+        All metrics are calculated automatically.'
+      operationId: get_conversion_funnel_analytics_funnel_get
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Conversion Funnel Analytics Funnel Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /calculators/pricing:
+    post:
+      tags:
+      - calculators
+      summary: Calculate Pricing
+      description: 'Calculate pricing and savings with ReliAPI.
+
+
+        Automatically calculates:
+
+        - Cost without ReliAPI
+
+        - Cost with ReliAPI (considering cache hits)
+
+        - Monthly savings
+
+        - Recommended plan'
+      operationId: calculate_pricing_calculators_pricing_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PricingCalculatorRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PricingCalculatorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /calculators/roi:
+    post:
+      tags:
+      - calculators
+      summary: Calculate Roi
+      description: 'Calculate ROI for ReliAPI implementation.
+
+
+        Automatically calculates:
+
+        - Cost savings from caching
+
+        - Development time savings
+
+        - Total ROI
+
+        - Payback period'
+      operationId: calculate_roi_calculators_roi_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ROICalculatorRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ROICalculatorResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /calculators/cost-savings:
+    get:
+      tags:
+      - calculators
+      summary: Calculate Cost Savings
+      description: 'Calculate cost savings from caching.
+
+
+        Simplified endpoint for quick calculations.'
+      operationId: calculate_cost_savings_calculators_cost_savings_get
+      parameters:
+      - name: monthly_requests
+        in: query
+        required: true
+        schema:
+          type: integer
+          title: Monthly Requests
+      - name: cost_per_request
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0.001
+          title: Cost Per Request
+      - name: cache_hit_rate
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 60
+          title: Cache Hit Rate
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Calculate Cost Savings Calculators Cost Savings Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /dashboard/:
+    get:
+      tags:
+      - dashboard
+      summary: Dashboard Html
+      description: Возвращает HTML дашборд.
+      operationId: dashboard_html_dashboard__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+  /dashboard/api/items:
+    get:
+      tags:
+      - dashboard
+      summary: Get Items
+      description: Получает отфильтрованные items для дашборда.
+      operationId: get_items_dashboard_api_items_get
+      parameters:
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+      - name: type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: date_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date From
+      - name: date_to
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Get Items Dashboard Api Items Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /dashboard/api/export:
+    get:
+      tags:
+      - dashboard
+      summary: Export Items
+      description: Экспортирует items в CSV или JSON.
+      operationId: export_items_dashboard_api_export_get
+      parameters:
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(json|csv)$
+          default: json
+          title: Format
+      - name: platform
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+      - name: type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ConversionEvent:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+        user_id:
+          type: string
+          title: User Id
+        properties:
+          additionalProperties: true
+          type: object
+          title: Properties
+      type: object
+      required:
+      - event_type
+      - user_id
+      title: ConversionEvent
+      description: Conversion event model.
+    CreateCheckoutRequest:
+      properties:
+        plan_id:
+          type: string
+          title: Plan Id
+        customer_email:
+          type: string
+          title: Customer Email
+        success_url:
+          type: string
+          title: Success Url
+        cancel_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cancel Url
+      type: object
+      required:
+      - plan_id
+      - customer_email
+      - success_url
+      title: CreateCheckoutRequest
+      description: Request to create a Paddle checkout.
+    Event:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        properties:
+          additionalProperties: true
+          type: object
+          title: Properties
+        timestamp:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Timestamp
+      type: object
+      required:
+      - event_name
+      title: Event
+      description: Analytics event model.
     HTTPProxyRequest:
       properties:
         target:
@@ -164,6 +928,7 @@ components:
         cache:
           anyOf:
           - type: integer
+            minimum: 0.0
           - type: 'null'
           title: Cache
           description: Cache TTL in seconds (overrides config default). Only applies
@@ -195,6 +960,20 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        version:
+          type: string
+          title: Version
+          default: 1.1.0
+      type: object
+      required:
+      - status
+      title: HealthResponse
+      description: Health check response model.
     LLMProxyRequest:
       properties:
         target:
@@ -207,6 +986,7 @@ components:
               type: string
             type: object
           type: array
+          minItems: 1
           title: Messages
           description: 'Messages list with ''role'' and ''content'' (e.g., [{''role'':
             ''user'', ''content'': ''Hello''}])'
@@ -220,6 +1000,7 @@ components:
         max_tokens:
           anyOf:
           - type: integer
+            minimum: 1.0
           - type: 'null'
           title: Max Tokens
           description: Maximum tokens in response (limited by config max_tokens and
@@ -227,12 +1008,16 @@ components:
         temperature:
           anyOf:
           - type: number
+            maximum: 2.0
+            minimum: 0.0
           - type: 'null'
           title: Temperature
           description: Temperature for sampling (0.0-2.0, limited by config)
         top_p:
           anyOf:
           - type: number
+            maximum: 1.0
+            minimum: 0.0
           - type: 'null'
           title: Top P
           description: Top-p sampling parameter (0.0-1.0)
@@ -245,9 +1030,7 @@ components:
           title: Stop
           description: Stop sequences (e.g., ['\n', 'END'])
         stream:
-          anyOf:
-          - type: boolean
-          - type: 'null'
+          type: boolean
           title: Stream
           description: Streaming mode. If true, returns Server-Sent Events (SSE) stream.
             If false or omitted, returns standard JSON response.
@@ -262,6 +1045,7 @@ components:
         cache:
           anyOf:
           - type: integer
+            minimum: 0.0
           - type: 'null'
           title: Cache
           description: Cache TTL in seconds (overrides config default). Cached responses
@@ -274,8 +1058,10 @@ components:
       description: 'Request schema for POST /proxy/llm.
 
 
-        Make idempotent LLM API calls with predictable costs. Supports OpenAI, Anthropic,
-        and Mistral.
+        Make idempotent LLM API calls with predictable costs.
+
+        Supports OpenAI, Anthropic, and Mistral.
+
 
         Features:
 
@@ -286,6 +1072,288 @@ components:
         - Caching: TTL cache for LLM responses
 
         - Retries: automatic retries on failures'
+    OnboardingRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        plan:
+          type: string
+          title: Plan
+          description: Plan to start with (free, pro, team)
+          default: free
+      type: object
+      required:
+      - email
+      title: OnboardingRequest
+      description: Onboarding request model.
+    OnboardingResponse:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+        quick_start_url:
+          type: string
+          title: Quick Start Url
+        documentation_url:
+          type: string
+          title: Documentation Url
+        example_code:
+          additionalProperties:
+            type: string
+          type: object
+          title: Example Code
+        integration_status:
+          type: string
+          title: Integration Status
+      type: object
+      required:
+      - api_key
+      - quick_start_url
+      - documentation_url
+      - example_code
+      - integration_status
+      title: OnboardingResponse
+      description: Onboarding response model.
+    PricingCalculatorRequest:
+      properties:
+        monthly_requests:
+          type: integer
+          minimum: 0.0
+          title: Monthly Requests
+          description: Monthly API requests
+        cost_per_request:
+          type: number
+          minimum: 0.0
+          title: Cost Per Request
+          description: Average cost per request (USD)
+        cache_hit_rate:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Cache Hit Rate
+          description: Cache hit rate (%)
+      type: object
+      required:
+      - monthly_requests
+      - cost_per_request
+      - cache_hit_rate
+      title: PricingCalculatorRequest
+      description: Pricing calculator request model.
+    PricingCalculatorResponse:
+      properties:
+        cost_without_reliapi:
+          type: number
+          title: Cost Without Reliapi
+        cost_with_reliapi:
+          type: number
+          title: Cost With Reliapi
+        monthly_savings:
+          type: number
+          title: Monthly Savings
+        savings_percentage:
+          type: number
+          title: Savings Percentage
+        reliapi_cost:
+          type: number
+          title: Reliapi Cost
+        net_savings:
+          type: number
+          title: Net Savings
+        recommended_plan:
+          type: string
+          title: Recommended Plan
+      type: object
+      required:
+      - cost_without_reliapi
+      - cost_with_reliapi
+      - monthly_savings
+      - savings_percentage
+      - reliapi_cost
+      - net_savings
+      - recommended_plan
+      title: PricingCalculatorResponse
+      description: Pricing calculator response model.
+    QuickStartGuide:
+      properties:
+        steps:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Steps
+        code_examples:
+          additionalProperties:
+            type: string
+          type: object
+          title: Code Examples
+        test_endpoint:
+          type: string
+          title: Test Endpoint
+      type: object
+      required:
+      - steps
+      - code_examples
+      - test_endpoint
+      title: QuickStartGuide
+      description: Quick start guide response.
+    ROICalculatorRequest:
+      properties:
+        current_monthly_cost:
+          type: number
+          minimum: 0.0
+          title: Current Monthly Cost
+          description: Current monthly API costs (USD)
+        expected_cache_hit_rate:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Expected Cache Hit Rate
+          description: Expected cache hit rate (%)
+        team_size:
+          type: integer
+          minimum: 1.0
+          title: Team Size
+          description: Team size
+        development_time_saved_hours:
+          type: number
+          minimum: 0.0
+          title: Development Time Saved Hours
+          description: Development time saved (hours/month)
+        hourly_rate:
+          type: number
+          minimum: 0.0
+          title: Hourly Rate
+          description: Developer hourly rate (USD)
+          default: 100
+      type: object
+      required:
+      - current_monthly_cost
+      - expected_cache_hit_rate
+      - team_size
+      - development_time_saved_hours
+      title: ROICalculatorRequest
+      description: ROI calculator request model.
+    ROICalculatorResponse:
+      properties:
+        monthly_cost_savings:
+          type: number
+          title: Monthly Cost Savings
+        annual_cost_savings:
+          type: number
+          title: Annual Cost Savings
+        development_time_savings_usd:
+          type: number
+          title: Development Time Savings Usd
+        total_monthly_savings:
+          type: number
+          title: Total Monthly Savings
+        total_annual_savings:
+          type: number
+          title: Total Annual Savings
+        reliapi_monthly_cost:
+          type: number
+          title: Reliapi Monthly Cost
+        net_monthly_savings:
+          type: number
+          title: Net Monthly Savings
+        net_annual_savings:
+          type: number
+          title: Net Annual Savings
+        roi_percentage:
+          type: number
+          title: Roi Percentage
+        payback_period_months:
+          type: number
+          title: Payback Period Months
+      type: object
+      required:
+      - monthly_cost_savings
+      - annual_cost_savings
+      - development_time_savings_usd
+      - total_monthly_savings
+      - total_annual_savings
+      - reliapi_monthly_cost
+      - net_monthly_savings
+      - net_annual_savings
+      - roi_percentage
+      - payback_period_months
+      title: ROICalculatorResponse
+      description: ROI calculator response model.
+    StatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - status
+      title: StatusResponse
+      description: Simple status response model.
+    SubscriptionPlan:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        price:
+          type: number
+          title: Price
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        interval:
+          type: string
+          title: Interval
+          default: month
+        requests_per_month:
+          type: integer
+          title: Requests Per Month
+        features:
+          items:
+            type: string
+          type: array
+          title: Features
+      type: object
+      required:
+      - id
+      - name
+      - price
+      - requests_per_month
+      title: SubscriptionPlan
+      description: Subscription plan model.
+    SubscriptionStatus:
+      properties:
+        subscription_id:
+          type: string
+          title: Subscription Id
+        status:
+          type: string
+          title: Status
+        plan_id:
+          type: string
+          title: Plan Id
+        current_period_end:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Current Period End
+        cancel_at_period_end:
+          type: boolean
+          title: Cancel At Period End
+          default: false
+      type: object
+      required:
+      - subscription_id
+      - status
+      - plan_id
+      title: SubscriptionStatus
+      description: Subscription status response.
     ValidationError:
       properties:
         loc:

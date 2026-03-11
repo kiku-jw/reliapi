@@ -1,0 +1,58 @@
+name: 'ReliAPI Client'
+description: 'GitHub Action to interact with ReliAPI for reliable HTTP and LLM API calls with built-in retries and error handling'
+author: 'KikuAI-Lab'
+
+branding:
+  icon: 'zap'
+  color: 'blue'
+
+inputs:
+  api-url:
+    description: 'Base URL of the ReliAPI instance'
+    required: true
+  api-key:
+    description: 'API key for authentication'
+    required: false
+    default: ''
+  endpoint:
+    description: 'API endpoint to call (e.g., /proxy/http, /proxy/llm, /healthz)'
+    required: true
+  method:
+    description: 'HTTP method (GET, POST, PUT, DELETE)'
+    required: false
+    default: 'GET'
+  body:
+    description: 'Request body as JSON string (for POST/PUT)'
+    required: false
+    default: ''
+  timeout:
+    description: 'Request timeout in milliseconds'
+    required: false
+    default: '30000'
+  retries:
+    description: 'Number of retry attempts'
+    required: false
+    default: '3'
+  retry-delay:
+    description: 'Delay between retries in milliseconds'
+    required: false
+    default: '1000'
+
+outputs:
+  response:
+    description: 'API response body as JSON string'
+  status:
+    description: 'HTTP status code'
+  success:
+    description: 'Whether the request succeeded (true/false)'
+  request-id:
+    description: 'Request ID from ReliAPI'
+  cache-hit:
+    description: 'Whether the response was from cache'
+  duration-ms:
+    description: 'Request duration in milliseconds'
+
+runs:
+  using: 'node20'
+  main: 'index.js'
+

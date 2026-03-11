@@ -16,6 +16,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from reliapi import __version__
 from reliapi.app.dependencies import (
     ConfigValidationError,
     get_app_state,
@@ -54,9 +55,7 @@ async def lifespan(app: FastAPI):
     state = get_app_state()
 
     # Startup
-    config_path = os.getenv(
-        "RELIAPI_CONFIG_PATH", os.getenv("RELIAPI_CONFIG", "config.yaml")
-    )
+    config_path = os.getenv("RELIAPI_CONFIG_PATH", os.getenv("RELIAPI_CONFIG", "config.yaml"))
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
     logger.info(f"Loading configuration from {config_path}")
@@ -67,13 +66,9 @@ async def lifespan(app: FastAPI):
     # Validate configuration (fail fast on invalid config)
     strict_validation = os.getenv("RELIAPI_STRICT_CONFIG", "true").lower() == "true"
     try:
-        validation_warnings = validate_startup_config(
-            state.config_loader, strict=strict_validation
-        )
+        validation_warnings = validate_startup_config(state.config_loader, strict=strict_validation)
         if validation_warnings:
-            logger.info(
-                f"Configuration loaded with {len(validation_warnings)} warning(s)"
-            )
+            logger.info(f"Configuration loaded with {len(validation_warnings)} warning(s)")
     except ConfigValidationError as e:
         logger.critical(f"Configuration validation failed: {e}")
         raise
@@ -138,7 +133,7 @@ def create_app() -> FastAPI:
     """
     app = FastAPI(
         title="ReliAPI",
-        version="1.0.7",
+        version=__version__,
         description=(
             "ReliAPI is a small LLM reliability layer for HTTP and LLM calls: "
             "retries, circuit breaker, cache, idempotency, and budget caps. "
@@ -177,13 +172,10 @@ def _configure_cors(app: FastAPI) -> None:
         cors_origins = _validate_cors_origins(cors_origins_env, is_production)
 
     if is_production:
-        logger.info(
-            f"CORS configured for production with {len(cors_origins)} allowed origin(s)"
-        )
+        logger.info(f"CORS configured for production with {len(cors_origins)} allowed origin(s)")
         if len(cors_origins) > 10:
             logger.warning(
-                f"Large number of CORS origins ({len(cors_origins)}), "
-                "consider consolidating"
+                f"Large number of CORS origins ({len(cors_origins)}), " "consider consolidating"
             )
 
     app.add_middleware(
@@ -213,9 +205,7 @@ def _validate_cors_origins(cors_origins_env: str, is_production: bool) -> List[s
         if not origin:
             continue
 
-        if origin != "*" and not (
-            origin.startswith("http://") or origin.startswith("https://")
-        ):
+        if origin != "*" and not (origin.startswith("http://") or origin.startswith("https://")):
             logger.warning(f"Invalid CORS origin format (skipping): {origin}")
             continue
 
@@ -268,11 +258,11 @@ def _register_routes(app: FastAPI) -> None:
     from reliapi.app.routes import health, proxy, rapidapi
 
     app.include_router(health.router)
-    
+
     # v1 API routes (canonical)
     app.include_router(proxy.router, prefix="/v1")
     app.include_router(rapidapi.router, prefix="/v1")
-    
+
     # Legacy routes (deprecated - will be removed in 6 months)
     app.include_router(proxy.router, deprecated=True, tags=["Legacy"])
     app.include_router(rapidapi.router, deprecated=True, tags=["Legacy"])
@@ -294,12 +284,10 @@ def _register_routes(app: FastAPI) -> None:
         app.include_router(dashboard.router)
 
         logger.info(
-            "Business routes registered: paddle, onboarding, analytics, "
-            "calculators, dashboard"
+            "Business routes registered: paddle, onboarding, analytics, " "calculators, dashboard"
         )
     except ImportError as e:
         logger.warning(f"Business routes not available: {e}")
-
 
 
 # Create the application instance

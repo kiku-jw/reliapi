@@ -1,0 +1,37 @@
+{
+  "name": "{{NPM_PACKAGE}}",
+  "version": "{{PRODUCT_VERSION}}",
+  "description": "JavaScript/TypeScript SDK for {{PRODUCT_NAME}} - Reliability layer for API calls",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"No tests yet\" && exit 0",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kiku-jw/{{PRODUCT_NAME}}"
+  },
+  "keywords": [
+    "api",
+    "sdk",
+    "reliapi",
+    "reliability",
+    "retries",
+    "circuit-breaker",
+    "caching",
+    "idempotency",
+    "llm",
+    "kikuai"
+  ],
+  "author": "KikuAI-Lab",
+  "license": "AGPL-3.0-only",
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}

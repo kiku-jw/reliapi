@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 class ConfigValidationError(Exception):
     """Raised when configuration validation fails."""
+
     pass
 
 
@@ -41,6 +42,7 @@ class AppState:
     This class encapsulates all global state for the ReliAPI application,
     making it easier to manage, test, and inject dependencies.
     """
+
     config_loader: Optional[ConfigLoader] = None
     targets: Dict[str, Dict] = field(default_factory=dict)
     cache: Optional[Cache] = None
@@ -103,19 +105,14 @@ def verify_api_key(request: Request) -> Tuple[Optional[str], Optional[str], str]
 
         # 2. Use rate_limiter with RapidAPI client for cache lookup
         if state.rate_limiter and api_key:
-            tier = state.rate_limiter.get_account_tier(
-                api_key, headers, state.rapidapi_client
-            )
+            tier = state.rate_limiter.get_account_tier(api_key, headers, state.rapidapi_client)
             return tier
 
         return "free"
 
     # Multi-tenant mode: check tenants config
-    if (state.config_loader and
-        hasattr(state.config_loader, 'config') and
-        state.config_loader.config.tenants):
-        tenants = state.config_loader.config.tenants
-
+    tenants = state.config_loader.get_tenants() if state.config_loader else None
+    if tenants:
         # Find tenant by API key
         for tenant_name, tenant_config in tenants.items():
             if tenant_config.api_key == api_key:
@@ -179,9 +176,9 @@ def verify_api_key(request: Request) -> Tuple[Optional[str], Optional[str], str]
 
     # For testing: allow keys starting with sk-free/sk-dev/sk-pro
     if api_key and (
-        api_key.startswith("sk-free") or
-        api_key.startswith("sk-dev") or
-        api_key.startswith("sk-pro")
+        api_key.startswith("sk-free")
+        or api_key.startswith("sk-dev")
+        or api_key.startswith("sk-pro")
     ):
         request.state.tenant = None
         request.state.tier = tier
@@ -215,10 +212,7 @@ def verify_api_key(request: Request) -> Tuple[Optional[str], Optional[str], str]
     return api_key, None, tier
 
 
-def detect_client_profile(
-    request: Request,
-    tenant: Optional[str] = None
-) -> Optional[str]:
+def detect_client_profile(request: Request, tenant: Optional[str] = None) -> Optional[str]:
     """Detect client profile using priority: X-Client header > tenant.profile > default.
 
     Args:
@@ -232,18 +226,27 @@ def detect_client_profile(
 
     # Priority 1: X-Client header
     client_header = request.headers.get("X-Client")
-    if (client_header and
-        state.client_profile_manager and
-        state.client_profile_manager.has_profile(client_header)):
+    if (
+        client_header
+        and state.client_profile_manager
+        and state.client_profile_manager.has_profile(client_header)
+    ):
         return client_header
 
     # Priority 2: tenant.profile
     if tenant and state.config_loader:
         tenant_config = state.config_loader.get_tenant(tenant)
-        if tenant_config and tenant_config.get("profile"):
-            profile_name = tenant_config.get("profile")
-            if (state.client_profile_manager and
-                state.client_profile_manager.has_profile(profile_name)):
+        profile_name = None
+        if tenant_config:
+            profile_name = (
+                tenant_config.profile
+                if hasattr(tenant_config, "profile")
+                else tenant_config.get("profile")
+            )
+        if profile_name:
+            if state.client_profile_manager and state.client_profile_manager.has_profile(
+                profile_name
+            ):
                 return profile_name
 
     # Priority 3: default
@@ -264,10 +267,7 @@ def get_account_id(api_key: Optional[str]) -> str:
     return hashlib.sha256(api_key.encode()).hexdigest()[:16]
 
 
-def validate_startup_config(
-    config_loader: ConfigLoader,
-    strict: bool = True
-) -> List[str]:
+def validate_startup_config(config_loader: ConfigLoader, strict: bool = True) -> List[str]:
     """Validate configuration at startup.
 
     Args:
@@ -382,8 +382,7 @@ def validate_startup_config(
         for error in errors:
             logger.error(f"Configuration error: {error}")
         raise ConfigValidationError(
-            f"Configuration validation failed with {len(errors)} error(s): "
-            f"{'; '.join(errors)}"
+            f"Configuration validation failed with {len(errors)} error(s): " f"{'; '.join(errors)}"
         )
 
     return warnings

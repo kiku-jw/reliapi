@@ -22,34 +22,18 @@ Reliability layer for API calls: retries, caching, dedup, circuit breakers.
 
 ```
 reliapi/
-├── core/                 # Core reliability components
-│   ├── cache.py          # Redis-based TTL cache
-│   ├── circuit_breaker.py
-│   ├── idempotency.py    # Request coalescing
-│   ├── retry.py          # Exponential backoff
-│   ├── rate_limiter.py   # Per-tenant rate limits
-│   ├── rate_scheduler.py # Token bucket algorithm
-│   ├── key_pool.py       # Multi-key management
-│   └── cost_estimator.py # LLM cost calculation
-├── app/
-│   ├── main.py           # FastAPI application
-│   ├── services.py       # Business logic
-│   ├── schemas.py        # Pydantic models
-│   └── routes/           # Business routes
-│       ├── paddle.py     # Payment processing
-│       ├── onboarding.py # Self-service signup
-│       ├── analytics.py  # Usage analytics
-│       ├── calculators.py# ROI/pricing calculators
-│       └── dashboard.py  # Admin dashboard
-├── adapters/
-│   └── llm/              # LLM provider adapters
-│       ├── openai.py
-│       ├── anthropic.py
-│       └── mistral.py
-├── config/               # Configuration loader
-├── metrics/              # Prometheus metrics
+├── reliapi/              # Importable Python package
+│   ├── app/              # FastAPI application and routes
+│   ├── core/             # Reliability primitives
+│   ├── adapters/         # Provider adapters
+│   ├── config/           # Configuration loader and schema
+│   ├── integrations/     # RapidAPI, RouteLLM, framework adapters
+│   └── metrics/          # Prometheus metrics
+├── cli/                  # CLI package
+├── action/               # GitHub Action
+├── scripts/              # OpenAPI / SDK / release helpers
+├── sdk/                  # SDK generation templates
 ├── examples/             # Code examples
-├── integrations/         # LangChain, LlamaIndex
 ├── openapi/              # OpenAPI specs
 ├── postman/              # Postman collection
 └── tests/                # Test suite
@@ -89,7 +73,8 @@ docker run -d -p 6379:6379 redis:7-alpine
 
 # Run server
 export REDIS_URL=redis://localhost:6379/0
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+export RELIAPI_CONFIG_PATH=config.yaml
+uvicorn reliapi.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ## Configuration
@@ -221,9 +206,15 @@ pytest
 pytest --cov=reliapi --cov-report=html
 ```
 
-## Deployment
+## Release Tooling
 
-See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for production deployment guide.
+- `make openapi` regenerates the OpenAPI schema from the FastAPI app
+- `make postman` rebuilds the Postman collection
+- `make sdk-js` and `make sdk-py` regenerate SDK packages
+- `make release-patch|minor|major` bumps version metadata and prepares a tagged release
+- `make cli` installs the local CLI package for smoke testing
+
+See [`docs/release.md`](./docs/release.md) and [`docs/SECRETS_SETUP.md`](./docs/SECRETS_SETUP.md) for release ops.
 
 ## Documentation
 

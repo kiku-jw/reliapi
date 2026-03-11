@@ -1,6 +1,6 @@
 """Free tier restrictions and validations."""
-from typing import Optional, List, Dict, Any
 import logging
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -21,54 +21,59 @@ FREE_TIER_BLOCKED_MODELS = {
 
 class FreeTierRestrictions:
     """Validations and restrictions for Free tier accounts."""
-    
+
     @staticmethod
     def is_model_allowed(provider: str, model: str, tier: str) -> tuple[bool, Optional[str]]:
         """
         Check if model is allowed for the tier.
-        
+
         Args:
             provider: LLM provider (openai, anthropic, mistral)
             model: Model name
             tier: Account tier (free, developer, pro)
-            
+
         Returns:
             Tuple of (allowed, error_message)
         """
         if tier != "free":
             # Developer and Pro tiers can use any model
             return True, None
-        
+
+        model_name = model.lower()
         # Free tier: check if model is in allowed list
-        allowed = FREE_TIER_ALLOWED_MODELS.get(provider, [])
-        blocked = FREE_TIER_BLOCKED_MODELS.get(provider, [])
-        
+        allowed = [
+            allowed_model.lower() for allowed_model in FREE_TIER_ALLOWED_MODELS.get(provider, [])
+        ]
+        blocked = [
+            blocked_model.lower() for blocked_model in FREE_TIER_BLOCKED_MODELS.get(provider, [])
+        ]
+
         # Check if explicitly blocked
-        if any(blocked_model in model.lower() for blocked_model in blocked):
+        if model_name in blocked:
             return False, "FREE_TIER_MODEL_NOT_ALLOWED"
-        
+
         # Check if in allowed list (if list is not empty)
-        if allowed and not any(allowed_model in model.lower() for allowed_model in allowed):
+        if allowed and model_name not in allowed:
             return False, "FREE_TIER_MODEL_NOT_ALLOWED"
-        
+
         return True, None
-    
+
     @staticmethod
     def is_feature_allowed(feature: str, tier: str) -> tuple[bool, Optional[str]]:
         """
         Check if feature is allowed for the tier.
-        
+
         Args:
             feature: Feature name (idempotency, soft_caps, long_fallbacks, semantic_caching, streaming, deep_idempotency)
             tier: Account tier
-            
+
         Returns:
             Tuple of (allowed, error_message)
         """
         if tier != "free":
             # Developer and Pro tiers have access to all features
             return True, None
-        
+
         # Free tier restrictions (SECURITY: No heavy features)
         free_tier_blocked_features = {
             "idempotency": "FREE_TIER_FEATURE_NOT_AVAILABLE",
@@ -79,12 +84,12 @@ class FreeTierRestrictions:
             "advanced_retries": "FREE_TIER_FEATURE_NOT_AVAILABLE",
             "streaming": "FREE_TIER_FEATURE_NOT_AVAILABLE",  # SSE streaming
         }
-        
+
         if feature in free_tier_blocked_features:
             return False, free_tier_blocked_features[feature]
-        
+
         return True, None
-    
+
     @staticmethod
     def get_max_retries(tier: str) -> int:
         """Get maximum retries allowed for tier."""
@@ -94,7 +99,7 @@ class FreeTierRestrictions:
             return 3
         else:  # pro
             return 5
-    
+
     @staticmethod
     def get_max_fallback_chain_length(tier: str) -> int:
         """Get maximum fallback chain length for tier."""
@@ -104,23 +109,23 @@ class FreeTierRestrictions:
             return 2
         else:  # pro
             return 5  # Unlimited for pro
-    
+
     @staticmethod
     def validate_request(
         provider: str,
         model: Optional[str],
         features: Dict[str, Any],
-        tier: str
+        tier: str,
     ) -> tuple[bool, Optional[str]]:
         """
         Validate request against tier restrictions.
-        
+
         Args:
             provider: LLM provider
             model: Model name (for LLM requests)
             features: Request features (idempotency_key, soft_cap, fallback_targets, etc.)
             tier: Account tier
-            
+
         Returns:
             Tuple of (allowed, error_message)
         """
@@ -129,23 +134,22 @@ class FreeTierRestrictions:
             allowed, error = FreeTierRestrictions.is_model_allowed(provider, model, tier)
             if not allowed:
                 return False, error
-        
+
         # Check idempotency
         if features.get("idempotency_key"):
             allowed, error = FreeTierRestrictions.is_feature_allowed("idempotency", tier)
             if not allowed:
                 return False, error
-        
+
         # Check soft caps
         if features.get("soft_cost_cap_usd"):
             allowed, error = FreeTierRestrictions.is_feature_allowed("soft_caps", tier)
             if not allowed:
                 return False, error
-        
+
         # Check fallback chain length
         fallback_targets = features.get("fallback_targets", [])
         if len(fallback_targets) > FreeTierRestrictions.get_max_fallback_chain_length(tier):
             return False, "FREE_TIER_FEATURE_NOT_AVAILABLE"
-        
-        return True, None
 
+        return True, None
