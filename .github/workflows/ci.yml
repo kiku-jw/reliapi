@@ -51,7 +51,7 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           RELIAPI_STRICT_CONFIG: "false"
         run: |
-          pytest tests/test_free_tier_restrictions.py tests/test_routes_business.py tests/test_llm_proxy.py -q
+          pytest tests/test_free_tier_restrictions.py tests/test_routes_business.py tests/test_llm_proxy.py tests/test_multi_tenant.py -q
 
       - name: Generate OpenAPI
         run: python3 scripts/generate_openapi.py
