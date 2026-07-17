@@ -24,6 +24,6 @@
   "license": "AGPL-3.0-only",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^8.56.0"
+    "eslint": "^10.7.0"
   }
 }
