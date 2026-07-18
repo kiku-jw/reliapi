@@ -31,8 +31,8 @@ dependencies = [
 reli = "cli.main:main"
 
 [project.urls]
-"Homepage" = "https://github.com/kiku-jw/reliapi"
-"Bug Tracker" = "https://github.com/kiku-jw/reliapi/issues"
+"Homepage" = "https://github.com/KikuAI-Lab/reliapi"
+"Bug Tracker" = "https://github.com/KikuAI-Lab/reliapi/issues"
 "Documentation" = "https://reliapi.kikuai.dev"
 
 [tool.setuptools]

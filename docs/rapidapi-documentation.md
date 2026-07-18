@@ -30,7 +30,7 @@ ReliAPI is available in multiple formats:
 - **PyPI Package**: [reliapi-sdk](https://pypi.org/project/reliapi-sdk/) - `pip install reliapi-sdk`
 - **Docker Image**: [kikudoc/reliapi](https://hub.docker.com/r/kikudoc/reliapi) - `docker pull kikudoc/reliapi`
 - **CLI Package**: [reliapi-cli](https://pypi.org/project/reliapi-cli/) - `pip install reliapi-cli`
-- **GitHub Repository**: [kiku-jw/reliapi](https://github.com/kiku-jw/reliapi) - Source code and documentation
+- **GitHub Repository**: [KikuAI-Lab/reliapi](https://github.com/KikuAI-Lab/reliapi) - Source code and documentation
 
 ---
 
@@ -441,9 +441,9 @@ ReliAPI implements rate limiting to protect upstream APIs:
 
 ## Support
 
-- **Documentation**: [GitHub Repository](https://github.com/kiku-jw/reliapi)
+- **Documentation**: [GitHub Repository](https://github.com/KikuAI-Lab/reliapi)
 - **Live Demo**: [Interactive Demo](https://kikuai-lab.github.io/reliapi/)
-- **Issues**: [GitHub Issues](https://github.com/kiku-jw/reliapi/issues)
+- **Issues**: [GitHub Issues](https://github.com/KikuAI-Lab/reliapi/issues)
 - **NPM Package**: [reliapi-sdk](https://www.npmjs.com/package/reliapi-sdk)
 - **PyPI Package**: [reliapi-sdk](https://pypi.org/project/reliapi-sdk/)
 - **Docker Image**: [kikudoc/reliapi](https://hub.docker.com/r/kikudoc/reliapi)
@@ -453,4 +453,4 @@ ReliAPI implements rate limiting to protect upstream APIs:
 
 ## License
 
-AGPL-3.0-only - See [LICENSE](https://github.com/kiku-jw/reliapi/blob/main/LICENSE) for details.
+AGPL-3.0-only - See [LICENSE](https://github.com/KikuAI-Lab/reliapi/blob/main/LICENSE) for details.

@@ -154,9 +154,9 @@ base_url="http://localhost:8000/proxy/llm"
 
 ## Support
 
-- [GitHub Issues](https://github.com/kiku-jw/reliapi/issues)
+- [GitHub Issues](https://github.com/KikuAI-Lab/reliapi/issues)
 - [Email](mailto:dev@kikuai.dev)
-- [Documentation](https://github.com/kiku-jw/reliapi/wiki)
+- [Documentation](https://github.com/KikuAI-Lab/reliapi/wiki)
 
 
 

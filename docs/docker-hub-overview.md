@@ -81,7 +81,7 @@ services:
 
 ## 📚 Documentation
 
-- **GitHub Repository**: [kiku-jw/reliapi](https://github.com/kiku-jw/reliapi)
+- **GitHub Repository**: [KikuAI-Lab/reliapi](https://github.com/KikuAI-Lab/reliapi)
 - **NPM Package**: [reliapi-sdk](https://www.npmjs.com/package/reliapi-sdk)
 - **PyPI Package**: [reliapi-sdk](https://pypi.org/project/reliapi-sdk/)
 - **OpenAPI Spec**: Available in the repository
@@ -107,11 +107,11 @@ Returns `200 OK` when the service is healthy.
 
 ## 📄 License
 
-AGPL-3.0-only - see [LICENSE](https://github.com/kiku-jw/reliapi/blob/main/LICENSE) for details.
+AGPL-3.0-only - see [LICENSE](https://github.com/KikuAI-Lab/reliapi/blob/main/LICENSE) for details.
 
 ## 💬 Support
 
-- **GitHub Issues**: [Report a bug or request a feature](https://github.com/kiku-jw/reliapi/issues)
+- **GitHub Issues**: [Report a bug or request a feature](https://github.com/KikuAI-Lab/reliapi/issues)
 - **Email**: dev@kikuai.dev
 
 ---

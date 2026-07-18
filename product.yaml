@@ -5,7 +5,7 @@ product:
   owner: KikuAI-Lab
   version: 1.1.0
 repos:
-  public: kiku-jw/reliapi
+  public: KikuAI-Lab/reliapi
 versioning:
   scheme: semver
   tag_prefix: v

@@ -68,7 +68,7 @@ def generate_openapi(config: dict) -> dict:
     openapi_schema["info"]["version"] = product.get("version", openapi_schema["info"]["version"])
 
     # Add contact info
-    public_repo = config.get("repos", {}).get("public", "kiku-jw/reliapi")
+    public_repo = config.get("repos", {}).get("public", "KikuAI-Lab/reliapi")
     openapi_schema["info"]["contact"] = {
         "name": "KikuAI-Lab",
         "url": f"https://github.com/{public_repo}",
