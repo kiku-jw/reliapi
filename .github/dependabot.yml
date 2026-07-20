@@ -54,7 +54,9 @@ updates:
       day: monday
       time: "05:00"
       timezone: Europe/Kyiv
-    open-pull-requests-limit: 5
+    # The action has no enforced npm lint/test gate yet. Keep security updates,
+    # but do not auto-open compatibility PRs for its dev-only tooling.
+    open-pull-requests-limit: 0
     groups:
       compatible-updates:
         patterns:
@@ -62,7 +64,6 @@ updates:
         update-types:
           - minor
           - patch
-
   - package-ecosystem: docker
     directory: /
     schedule:
@@ -70,7 +71,9 @@ updates:
       day: monday
       time: "05:00"
       timezone: Europe/Kyiv
-    open-pull-requests-limit: 5
+    # Keep the container on the repository's declared Python support line.
+    # Security update PRs remain enabled.
+    open-pull-requests-limit: 0
     groups:
       compatible-updates:
         patterns:
