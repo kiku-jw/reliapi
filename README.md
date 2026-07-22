@@ -6,6 +6,8 @@ Reliability layer for API calls: retries, caching, dedup, circuit breakers.
 [![PyPI version](https://badge.fury.io/py/reliapi-sdk.svg)](https://pypi.org/project/reliapi-sdk/)
 [![Docker](https://img.shields.io/docker/v/kikudoc/reliapi?label=docker)](https://hub.docker.com/r/kikudoc/reliapi)
 
+**[Open the project site](https://kikuai-lab.github.io/reliapi/)**
+
 ## Features
 
 - **Retries with Backoff** - Automatic retries with exponential backoff
@@ -226,6 +228,12 @@ See [`docs/release.md`](./docs/release.md) and [`docs/SECRETS_SETUP.md`](./docs/
 
 - GitHub Issues: https://github.com/KikuAI-Lab/reliapi/issues
 - Email: dev@kikuai.dev
+
+## Follow the work
+
+Project notes and new tools: [Telegram](https://t.me/kiku_ai) ·
+[LinkedIn](https://www.linkedin.com/in/kiku-jw/) ·
+[KikuAI](https://kikuai.dev/)
 
 ## License
 
