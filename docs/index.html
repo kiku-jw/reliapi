@@ -3,128 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReliAPI - Stability Engine for HTTP and LLM APIs</title>
-  <meta name="description" content="Transform chaos into stability. ReliAPI provides automatic failover, rate limit handling, request deduplication, and budget protection for your API calls.">
-  <meta name="keywords" content="OpenAI API, Anthropic API, Mistral API, LLM API, retry logic, API caching, idempotency, circuit breaker, API proxy, reduce API costs, prevent duplicate charges, OpenAI retry, API reliability, HTTP API proxy, LLM proxy, budget caps, cost tracking">
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "ReliAPI",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "description": "Production-ready reliability layer for HTTP and LLM APIs with automatic retries, caching, idempotency, and budget controls. Prevents duplicate charges, reduces API costs by 50-80%, and provides circuit breaker functionality.",
-    "keywords": "OpenAI API, Anthropic API, Mistral API, retry logic, API caching, idempotency, circuit breaker, API proxy, reduce API costs, prevent duplicate charges",
-    "author": {
-      "@type": "Organization",
-      "name": "KikuAI Lab",
-      "url": "https://github.com/KikuAI-Lab"
-    },
-    "codeRepository": "https://github.com/KikuAI-Lab/reliapi",
-    "programmingLanguage": "Python",
-    "runtimePlatform": "Python 3.12+",
-    "url": "https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi",
-    "screenshot": "./images/reliapi-logo.png"
-  }
-  </script>
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "KikuAI Lab",
-    "url": "https://github.com/KikuAI-Lab",
-    "logo": "./images/reliapi-logo.png",
-    "sameAs": [
-      "https://github.com/KikuAI-Lab/reliapi"
-    ]
-  }
-  </script>
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://github.com/KikuAI-Lab/reliapi"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Documentation",
-        "item": "./index.html"
-      }
-    ]
-  }
-  </script>
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How does ReliAPI prevent duplicate charges?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "ReliAPI uses idempotency keys to ensure the same request is only charged once, even if users click twice or retries happen. Same request with same key = only one charge."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How much can I save on LLM API costs with ReliAPI?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "ReliAPI can reduce LLM API costs by 50-80% through intelligent caching. Repeated questions don't trigger new API calls - same question = instant response, no API call, no charge."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does ReliAPI support OpenAI, Anthropic, and Mistral APIs?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, ReliAPI works seamlessly with OpenAI (GPT-4, GPT-4 Turbo, GPT-3.5), Anthropic (Claude 3 Opus, Sonnet, Haiku), and Mistral (Large, Medium, Small) APIs. No configuration needed for LLM providers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is a circuit breaker and how does ReliAPI use it?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A circuit breaker automatically stops calling failing services to prevent cascading failures. ReliAPI's circuit breaker detects failures and auto-recovers when services come back online, protecting your application from API outages."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does ReliAPI handle retry logic?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "ReliAPI implements automatic retries with exponential backoff and jitter. It respects Retry-After headers from upstream APIs and handles temporary failures gracefully, eliminating the need for manual retry logic."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I set budget limits with ReliAPI?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, ReliAPI supports both hard and soft cost caps for LLM APIs. Hard caps automatically reject expensive requests before they execute, while soft caps reduce max_tokens to stay within budget. Perfect for preventing surprise bills."
-        }
-      }
-    ]
-  }
-  </script>
+  <title>ReliAPI - Beta HTTP and LLM Proxy Primitives</title>
+  <meta name="description" content="Beta self-hosted HTTP and LLM proxy with Redis-backed caching, non-streaming LLM idempotency, and configurable LLM budget guardrails.">
+  <link rel="canonical" href="https://kikuai-lab.github.io/reliapi/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ReliAPI - Beta HTTP and LLM Proxy Primitives">
+  <meta property="og:description" content="Self-hosted caching, non-streaming LLM idempotency, and configurable LLM budget guardrails.">
+  <meta property="og:url" content="https://kikuai-lab.github.io/reliapi/">
+  <meta property="og:image" content="https://kikuai-lab.github.io/reliapi/images/reliapi-logo.png">
+  <meta property="og:image:alt" content="ReliAPI logo">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ReliAPI - Beta HTTP and LLM Proxy Primitives">
+  <meta name="twitter:description" content="Self-hosted caching, non-streaming LLM idempotency, and configurable LLM budget guardrails.">
+  <meta name="twitter:image" content="https://kikuai-lab.github.io/reliapi/images/reliapi-logo.png">
+  <meta name="twitter:image:alt" content="ReliAPI logo">
   
   <link rel="icon" href="./images/reliapi-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -338,10 +230,6 @@
       .vis-content > div > div { min-width: auto !important; }
       .vis-content .flex.flex-col.items-center { min-width: 60px !important; }
       .vis-content .flex.flex-col.items-center > div { width: 50px !important; height: 50px !important; font-size: 1.25rem !important; }
-      .vis-content .server-card { padding: 0.5rem !important; gap: 0.5rem !important; }
-      .vis-content .server-card svg { width: 24px !important; height: 24px !important; }
-      .vis-content .server-card .font-medium { font-size: 0.75rem !important; }
-      .vis-content .server-card .text-sm { font-size: 0.7rem !important; }
       .vis-content .funnel-box { width: 60px !important; height: 60px !important; padding: 0.5rem !important; }
       .vis-content .funnel-box svg { width: 32px !important; height: 32px !important; }
       .vis-content .funnel-box .text-xs { font-size: 0.65rem !important; }
@@ -349,8 +237,6 @@
       .vis-content .text-2xl { font-size: 1.25rem !important; }
       .vis-content .text-sm { font-size: 0.75rem !important; }
       .code-block { font-size: 0.75rem !important; padding: 1rem !important; }
-      .comparison-table { font-size: 0.875rem; }
-      .comparison-table th, .comparison-table td { padding: 0.75rem 0.5rem !important; }
       .link-card { padding: 1rem !important; }
       .link-icon { width: 40px !important; height: 40px !important; }
       .btn { padding: 0.75rem 1.5rem !important; font-size: 0.875rem !important; }
@@ -380,10 +266,6 @@
       .vis-content .flex.flex-col.items-center { min-width: 50px !important; }
       .vis-content .flex.flex-col.items-center > div { width: 40px !important; height: 40px !important; font-size: 1rem !important; }
       .vis-content .flex.flex-col.items-center .text-xs { font-size: 0.6rem !important; }
-      .vis-content .server-card { padding: 0.4rem !important; gap: 0.4rem !important; }
-      .vis-content .server-card svg { width: 20px !important; height: 20px !important; }
-      .vis-content .server-card .font-medium { font-size: 0.7rem !important; }
-      .vis-content .server-card .text-sm { font-size: 0.65rem !important; }
       .vis-content .funnel-box { width: 50px !important; height: 50px !important; padding: 0.4rem !important; }
       .vis-content .funnel-box svg { width: 24px !important; height: 24px !important; }
       .vis-content .funnel-box .text-xs { font-size: 0.6rem !important; }
@@ -392,8 +274,6 @@
       .vis-content .text-sm { font-size: 0.7rem !important; }
       .vis-content .flex.flex-col.gap-8 { gap: 0.5rem !important; }
       .code-block { font-size: 0.7rem !important; padding: 0.75rem !important; }
-      .comparison-table { font-size: 0.75rem; overflow-x: auto; display: block; }
-      .comparison-table th, .comparison-table td { padding: 0.5rem 0.25rem !important; white-space: nowrap; }
     }
     
     /* Hero Section */
@@ -705,94 +585,6 @@
       padding: 2rem;
     }
     
-    .server-card {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem;
-      border-radius: 0.75rem;
-      border: 2px solid var(--border);
-      background: var(--card);
-      transition: all 0.5s ease;
-    }
-    
-    .server-card.error {
-      border-color: var(--destructive);
-      background: rgba(248, 113, 113, 0.1);
-    }
-    
-    .server-card.success {
-      border-color: var(--green);
-      background: rgba(74, 222, 128, 0.1);
-      box-shadow: 0 0 30px rgba(74, 222, 128, 0.3);
-    }
-    
-    .server-card.activating {
-      border-color: var(--primary);
-      background: rgba(168, 156, 196, 0.1);
-    }
-    
-    .countdown-circle {
-      width: 192px;
-      height: 192px;
-      border-radius: 50%;
-      border: 4px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      transition: all 0.5s ease;
-    }
-    
-    .countdown-circle.warning {
-      border-color: var(--yellow);
-      background: rgba(251, 191, 36, 0.1);
-    }
-    
-    .countdown-circle.processing {
-      border-color: var(--primary);
-      background: rgba(168, 156, 196, 0.1);
-    }
-    
-    .countdown-circle.success {
-      border-color: var(--green);
-      background: rgba(74, 222, 128, 0.1);
-      box-shadow: 0 0 60px rgba(74, 222, 128, 0.4);
-    }
-    
-    .spinning-ring {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 4px solid transparent;
-      border-top-color: var(--primary);
-      animation: spin 1s linear infinite;
-    }
-    
-    .retry-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 0.75rem;
-      border: 2px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: var(--card);
-      transition: all 0.3s ease;
-    }
-    
-    .retry-box.active {
-      border-color: var(--primary);
-      background: rgba(168, 156, 196, 0.2);
-    }
-    
-    .retry-box.success {
-      border-color: var(--green);
-      background: rgba(74, 222, 128, 0.2);
-    }
-    
     .funnel-box {
       width: 128px;
       height: 128px;
@@ -842,127 +634,6 @@
       font-size: 0.75rem;
       color: var(--destructive);
       font-weight: 600;
-    }
-    
-    /* Statistics Section */
-    .stat-card {
-      padding: 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid var(--border);
-      background: rgba(40, 47, 51, 0.5);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .stat-card:hover {
-      border-color: var(--primary);
-      background: rgba(168, 156, 196, 0.1);
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(168, 156, 196, 0.2);
-    }
-    
-    .progress-bar {
-      height: 12px;
-      background: var(--card);
-      border-radius: 9999px;
-      overflow: hidden;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      border-radius: 9999px;
-      transition: width 1s ease-out;
-    }
-    
-    .progress-fill.red { background: rgba(248, 113, 113, 0.8); }
-    .progress-fill.green { background: rgba(74, 222, 128, 0.8); }
-    
-    .latency-bar {
-      height: 40px;
-      background: var(--card);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .latency-bar:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(168, 156, 196, 0.3);
-    }
-    
-    .latency-fill {
-      height: 100%;
-      border-radius: 0.5rem;
-      transition: width 1s ease-out;
-      display: flex;
-      align-items: center;
-      padding-left: 0.75rem;
-    }
-    
-    /* Comparison Table */
-    .comparison-table {
-      width: 100%;
-      border-collapse: collapse;
-      border-radius: 1rem;
-      overflow: hidden;
-    }
-    
-    .comparison-table th,
-    .comparison-table td {
-      padding: 1.25rem 1rem;
-      text-align: center;
-    }
-    
-    .comparison-table th {
-      background: transparent;
-      border-bottom: 1px solid var(--border);
-      font-weight: 500;
-      color: var(--muted-foreground);
-    }
-    
-    .comparison-table th.highlight {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1.125rem;
-    }
-    
-    .comparison-table tbody tr {
-      border-bottom: 1px solid rgba(58, 66, 72, 0.5);
-      transition: all 0.3s ease;
-    }
-    
-    .comparison-table tbody tr:hover {
-      background: rgba(168, 156, 196, 0.05);
-    }
-    
-    .comparison-table td:first-child {
-      text-align: left;
-      padding-left: 1.5rem;
-    }
-    
-    .status-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .status-icon.full {
-      background: rgba(74, 222, 128, 0.2);
-      color: var(--green);
-    }
-    
-    .status-icon.partial {
-      background: rgba(251, 191, 36, 0.2);
-      color: var(--yellow);
-    }
-    
-    .status-icon.none {
-      background: rgba(248, 113, 113, 0.2);
-      color: var(--destructive);
     }
     
     /* Code Examples */
@@ -1160,9 +831,10 @@
         <img src="./images/reliapi-logo.png" alt="ReliAPI Logo" class="hero-logo" style="margin: 0 auto;">
       </div>
       
+      <p class="text-yellow font-semibold mb-4">Beta · Self-hosted</p>
       <h1 class="hero-title mb-6">ReliAPI</h1>
       
-      <p class="hero-subtitle mb-12">Stability Engine for HTTP and LLM APIs</p>
+      <p class="hero-subtitle mb-12">Caching, non-streaming LLM idempotency, and budget guardrails</p>
       
       <div class="flex gap-4 justify-center" style="flex-wrap: wrap;">
         <a href="https://rapidapi.com/kikuai-lab-kikuai-lab-default/api/reliapi" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
@@ -1174,12 +846,6 @@
           Documentation
         </a>
       </div>
-      
-      <div class="mt-8 flex justify-center">
-        <a href="https://www.producthunt.com/products/reliapi?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-reliapi" target="_blank" rel="noopener noreferrer">
-          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1045596&theme=dark&t=1764837064832" alt="ReliAPI - Stop&#0032;losing&#0032;money&#0032;on&#0032;failed&#0032;OpenAI&#0032;and&#0032;Anthropic&#0032;API&#0032;calls&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
-        </a>
-      </div>
     </div>
     
     <div class="scroll-indicator">
@@ -1188,20 +854,15 @@
     </div>
   </section>
 
-  <!-- Transform Chaos Section -->
+  <!-- Proxy Flow Section -->
   <section class="section">
     <div class="container">
-      <h2 class="text-3xl font-bold text-center mb-16">
-        <span>Transform </span>
-        <span class="text-destructive">Chaos</span>
-        <span> into </span>
-        <span class="text-green">Stability</span>
-      </h2>
+      <h2 class="text-3xl font-bold text-center mb-16">Self-hosted Proxy Primitives for Evaluation</h2>
       
       <div class="flex items-center justify-center gap-4 md-flex" style="flex-wrap: wrap;">
         <!-- Chaos Side -->
         <div class="flex flex-col items-center" style="flex: 1; min-width: 200px;">
-          <div class="text-destructive font-semibold mb-4 text-lg">Chaos</div>
+          <div class="text-destructive font-semibold mb-4 text-lg">Requests</div>
           <div class="relative" style="width: 192px; height: 192px;">
             <div id="chaos-boxes"></div>
           </div>
@@ -1261,7 +922,7 @@
         
         <!-- Stability Side -->
         <div class="flex flex-col items-center" style="flex: 1; min-width: 200px;">
-          <div class="text-green font-semibold mb-4 text-lg">Stability</div>
+          <div class="text-green font-semibold mb-4 text-lg">Responses</div>
           <div class="relative" style="width: 192px; height: 192px;">
             <div id="stable-boxes"></div>
           </div>
@@ -1274,31 +935,16 @@
   <section class="section section-bg">
     <div class="container">
       <h2 class="text-3xl font-bold text-center mb-4">See ReliAPI in Action</h2>
-      <p class="text-muted text-center mb-12">Click a scenario to see how it works</p>
+      <p class="text-muted text-center mb-4">Click a scenario to see an illustrative beta flow</p>
+      <p class="text-xs text-center mb-12" style="color: rgba(155, 160, 165, 0.7);">These flows cover the documented non-streaming LLM and budget baseline; review the Beta Limitations before integrating.</p>
       
-      <div class="grid grid-4 gap-4 mb-12" id="scenario-buttons">
-        <button class="scenario-btn" data-scenario="provider-errors">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="scenario-icon" style="background: rgba(248, 113, 113, 0.2);">💥</div>
-          </div>
-          <div class="font-semibold mb-1" style="color: var(--foreground);">Provider Errors</div>
-          <div class="text-xs text-muted">Automatic failover</div>
-        </button>
-        
-        <button class="scenario-btn" data-scenario="rate-limits">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="scenario-icon" style="background: rgba(251, 191, 36, 0.2);">⏱️</div>
-          </div>
-          <div class="font-semibold mb-1" style="color: var(--foreground);">Rate Limits</div>
-          <div class="text-xs text-muted">Smart retry</div>
-        </button>
-        
+      <div class="grid grid-2 gap-4 mb-12" id="scenario-buttons">
         <button class="scenario-btn" data-scenario="request-storm">
           <div class="flex items-center gap-4 mb-4">
             <div class="scenario-icon" style="background: rgba(168, 156, 196, 0.2);">⚡</div>
           </div>
-          <div class="font-semibold mb-1" style="color: var(--foreground);">Request Storm</div>
-          <div class="text-xs text-muted">Idempotency</div>
+          <div class="font-semibold mb-1" style="color: var(--foreground);">Repeated Non-streaming LLM Calls</div>
+          <div class="text-xs text-muted">Beta LLM idempotency</div>
         </button>
         
         <button class="scenario-btn" data-scenario="budget-cap">
@@ -1306,7 +952,7 @@
             <div class="scenario-icon" style="background: rgba(74, 222, 128, 0.2);">💰</div>
           </div>
           <div class="font-semibold mb-1" style="color: var(--foreground);">Budget Cap Hit</div>
-          <div class="text-xs text-muted">Cost protection</div>
+          <div class="text-xs text-muted">Pre-request estimate</div>
         </button>
       </div>
       
@@ -1320,193 +966,6 @@
         </div>
         <div id="vis-content" style="display: none;"></div>
         <div class="phase-badge" id="phase-badge" style="display: none;"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Statistics Section -->
-  <section class="section">
-    <div class="container">
-      <h2 class="text-3xl font-bold text-center mb-4">Performance That Speaks for Itself</h2>
-      <p class="text-muted text-center mb-4">Hover over metrics to explore the ReliAPI difference</p>
-      <p class="text-xs text-center mb-16" style="color: rgba(155, 160, 165, 0.6);">*Benchmarks are synthetic. Actual results depend on environment. <a href="https://github.com/KikuAI-Lab/reliapi/blob/main/docs/BENCHMARKS.md" style="color: var(--primary);">See methodology</a></p>
-      
-      <div class="grid grid-2 gap-12">
-        <!-- Stats Cards -->
-        <div>
-          <h3 class="text-xl font-semibold mb-6">Direct API vs With ReliAPI</h3>
-          <div class="flex flex-col gap-4">
-            <div class="stat-card">
-              <div class="flex justify-between items-center mb-4">
-                <span class="text-sm font-medium text-muted">Error Rate</span>
-                <svg class="icon-sm text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-              </div>
-              <div class="flex gap-4">
-                <div style="flex: 1;">
-                  <div class="text-xs text-destructive mb-2">Direct</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill red" id="stat-error-direct" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-destructive">20%</div>
-                </div>
-                <div style="width: 1px; background: var(--border);"></div>
-                <div style="flex: 1;">
-                  <div class="text-xs text-green mb-2">ReliAPI</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill green" id="stat-error-reli" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-green">1%</div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="stat-card">
-              <div class="flex justify-between items-center mb-4">
-                <span class="text-sm font-medium text-muted">Cost Variance</span>
-                <svg class="icon-sm text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-              </div>
-              <div class="flex gap-4">
-                <div style="flex: 1;">
-                  <div class="text-xs text-destructive mb-2">Direct</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill red" id="stat-cost-direct" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-destructive">±30%</div>
-                </div>
-                <div style="width: 1px; background: var(--border);"></div>
-                <div style="flex: 1;">
-                  <div class="text-xs text-green mb-2">ReliAPI</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill green" id="stat-cost-reli" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-green">±2%</div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="stat-card">
-              <div class="flex justify-between items-center mb-4">
-                <span class="text-sm font-medium text-muted">Cache Hit Rate</span>
-                <svg class="icon-sm text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-              </div>
-              <div class="flex gap-4">
-                <div style="flex: 1;">
-                  <div class="text-xs text-destructive mb-2">Direct</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill red" id="stat-cache-direct" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-destructive">15%</div>
-                </div>
-                <div style="width: 1px; background: var(--border);"></div>
-                <div style="flex: 1;">
-                  <div class="text-xs text-green mb-2">ReliAPI</div>
-                  <div class="progress-bar mb-2"><div class="progress-fill green" id="stat-cache-reli" style="width: 0%;"></div></div>
-                  <div class="text-lg font-bold text-green">68%</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Latency Bars -->
-        <div style="margin-left: 2rem;">
-          <h3 class="text-xl font-semibold mb-6">P95 Proxy Overhead (ms)</h3>
-          <p class="text-xs text-muted mb-4">Additional latency added by proxy layer</p>
-          <div class="flex flex-col gap-4">
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="text-muted font-medium">Helicone</span>
-                <span class="text-destructive">~40ms</span>
-              </div>
-              <div class="latency-bar">
-                <div class="latency-fill" id="latency-helicone" style="width: 0%; background: var(--destructive);"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="text-muted font-medium">LiteLLM</span>
-                <span class="text-yellow">~30ms</span>
-              </div>
-              <div class="latency-bar">
-                <div class="latency-fill" id="latency-litellm" style="width: 0%; background: var(--yellow);"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="text-muted font-medium">Portkey</span>
-                <span class="text-yellow">~25ms</span>
-              </div>
-              <div class="latency-bar">
-                <div class="latency-fill" id="latency-portkey" style="width: 0%; background: var(--yellow);"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between text-sm mb-2">
-                <span class="text-green font-medium">ReliAPI</span>
-                <span class="text-green font-bold">~15ms</span>
-              </div>
-              <div class="latency-bar">
-                <div class="latency-fill" id="latency-reliapi" style="width: 0%; background: var(--green);"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Comparison Table Section -->
-  <section class="section section-bg">
-    <div class="container" style="max-width: 900px;">
-      <h2 class="text-3xl font-bold text-center mb-4">How We Compare</h2>
-      <p class="text-muted text-center mb-12">Feature comparison with popular alternatives</p>
-      
-      <div class="rounded-2xl border bg-card overflow-hidden" style="background: rgba(40, 47, 51, 0.5);">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th style="text-align: left; padding-left: 1.5rem;">Feature</th>
-              <th class="highlight">ReliAPI</th>
-              <th>LiteLLM</th>
-              <th>Portkey</th>
-              <th>Helicone</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Self-hosted Option</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon none">✗</span></td>
-            </tr>
-            <tr>
-              <td>HTTP + LLM Support</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon none">✗</span></td>
-              <td><span class="status-icon none">✗</span></td>
-              <td><span class="status-icon none">✗</span></td>
-            </tr>
-            <tr>
-              <td>Idempotency Keys</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon none">✗</span></td>
-              <td><span class="status-icon partial">~</span></td>
-              <td><span class="status-icon none">✗</span></td>
-            </tr>
-            <tr>
-              <td>Budget Caps</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon partial">~</span></td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon partial">~</span></td>
-            </tr>
-            <tr>
-              <td>Minimal Config</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon partial">~</span></td>
-              <td><span class="status-icon partial">~</span></td>
-              <td><span class="status-icon full">✓</span></td>
-            </tr>
-            <tr>
-              <td>Streaming Support</td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon full">✓</span></td>
-              <td><span class="status-icon full">✓</span></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </section>
@@ -1547,7 +1006,7 @@
           </div>
           <div>
             <div class="link-title">Try on RapidAPI</div>
-            <div class="link-description">Start using ReliAPI in minutes</div>
+            <div class="link-description">Open the current API listing</div>
           </div>
         </a>
         
@@ -1557,7 +1016,7 @@
           </div>
           <div>
             <div class="link-title">Documentation</div>
-            <div class="link-description">Complete API reference</div>
+            <div class="link-description">Project documentation</div>
           </div>
         </a>
         
@@ -1571,16 +1030,9 @@
           </div>
         </a>
       </div>
-      
-      <div class="mt-12 flex justify-center">
-        <a href="https://www.producthunt.com/products/reliapi?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-reliapi" target="_blank" rel="noopener noreferrer">
-          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1045596&theme=dark&t=1764837064832" alt="ReliAPI - Stop&#0032;losing&#0032;money&#0032;on&#0032;failed&#0032;OpenAI&#0032;and&#0032;Anthropic&#0032;API&#0032;calls&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
-        </a>
-      </div>
-      
       <div class="footer">
         <p class="text-muted text-sm">Built with care by <a href="https://kikuai.dev">KikuAI Lab</a></p>
-        <p class="text-xs mt-2" style="color: rgba(155, 160, 165, 0.6);">Transform chaos into stability. One API call at a time.</p>
+        <p class="text-xs mt-2" style="color: rgba(155, 160, 165, 0.6);">Self-hosted proxy primitives for evaluation.</p>
       </div>
     </div>
   </section>
@@ -1630,166 +1082,6 @@
     let animationTimeout = null;
     
     const scenarios = {
-      'provider-errors': {
-        chaos: `
-          <div class="vis-content">
-            <div class="flex items-center gap-8">
-              <div class="flex flex-col items-center">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: rgba(168, 156, 196, 0.2); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 2rem;">📨</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Your Request</span>
-              </div>
-              <div style="font-size: 2rem; color: var(--destructive);">→</div>
-              <div class="flex flex-col gap-4">
-                <div class="server-card error animate-shake">
-                  <svg style="width: 40px; height: 40px; color: var(--destructive);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Primary Server</div>
-                    <div class="text-sm text-destructive">❌ Error 500!</div>
-                  </div>
-                </div>
-                <div class="server-card" style="opacity: 0.5;">
-                  <svg style="width: 40px; height: 40px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Backup Server</div>
-                    <div class="text-sm text-muted">Standby</div>
-                  </div>
-                </div>
-              </div>
-              <div style="font-size: 2rem; color: var(--muted-foreground); opacity: 0.3;">→</div>
-              <div class="flex flex-col items-center" style="opacity: 0.3;">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 2rem;">❓</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Response</span>
-              </div>
-            </div>
-          </div>
-        `,
-        processing: `
-          <div class="vis-content">
-            <div class="flex items-center gap-8">
-              <div class="flex flex-col items-center">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: rgba(168, 156, 196, 0.2); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 2rem;">📨</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Your Request</span>
-              </div>
-              <div style="font-size: 2rem; color: var(--primary);">→</div>
-              <div class="flex flex-col gap-4">
-                <div class="server-card" style="opacity: 0.5; border-color: var(--muted);">
-                  <svg style="width: 40px; height: 40px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Primary Server</div>
-                    <div class="text-sm text-muted">Offline</div>
-                  </div>
-                </div>
-                <div class="server-card activating" style="animation: pulse-ring 1s ease-in-out infinite;">
-                  <svg style="width: 40px; height: 40px; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Backup Server</div>
-                    <div class="text-sm text-primary">🔄 Activating...</div>
-                  </div>
-                </div>
-              </div>
-              <div style="font-size: 2rem; color: var(--muted-foreground); opacity: 0.5;">→</div>
-              <div class="flex flex-col items-center" style="opacity: 0.5;">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: var(--card); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 2rem;">❓</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Response</span>
-              </div>
-            </div>
-          </div>
-        `,
-        resolved: `
-          <div class="vis-content">
-            <div class="flex items-center gap-8">
-              <div class="flex flex-col items-center">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: rgba(168, 156, 196, 0.2); border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 2rem;">📨</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Your Request</span>
-              </div>
-              <div style="font-size: 2rem; color: var(--green);">→</div>
-              <div class="flex flex-col gap-4">
-                <div class="server-card" style="opacity: 0.5; border-color: var(--muted);">
-                  <svg style="width: 40px; height: 40px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Primary Server</div>
-                    <div class="text-sm text-muted">Offline</div>
-                  </div>
-                </div>
-                <div class="server-card success">
-                  <svg style="width: 40px; height: 40px; color: var(--green);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                  <div>
-                    <div class="font-medium">Backup Server</div>
-                    <div class="text-sm text-green">✅ Online!</div>
-                  </div>
-                  <svg class="animate-bounce" style="width: 32px; height: 32px; color: var(--green); margin-left: 1rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                </div>
-              </div>
-              <div style="font-size: 2rem; color: var(--green);">→</div>
-              <div class="flex flex-col items-center">
-                <div style="width: 80px; height: 80px; border-radius: 1rem; background: rgba(74, 222, 128, 0.2); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(74, 222, 128, 0.4);">
-                  <span style="font-size: 2rem;">✅</span>
-                </div>
-                <span class="text-xs text-muted mt-2">Response</span>
-              </div>
-            </div>
-          </div>
-        `
-      },
-      'rate-limits': {
-        chaos: `
-          <div class="vis-content">
-            <div class="flex flex-col items-center gap-8">
-              <div class="countdown-circle warning">
-                <svg style="width: 64px; height: 64px; color: var(--yellow);" class="animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <div style="font-size: 2rem; font-weight: bold; color: var(--yellow); margin-top: 0.5rem;">429</div>
-                <div class="text-sm text-yellow">Rate Limited!</div>
-              </div>
-              <div class="flex gap-4">
-                <div class="retry-box"><svg style="width: 20px; height: 20px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 1</span></div>
-                <div class="retry-box"><svg style="width: 20px; height: 20px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 2</span></div>
-                <div class="retry-box"><svg style="width: 20px; height: 20px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 3</span></div>
-              </div>
-            </div>
-          </div>
-        `,
-        processing: `
-          <div class="vis-content">
-            <div class="flex flex-col items-center gap-8">
-              <div class="countdown-circle processing" style="position: relative;">
-                <div class="spinning-ring"></div>
-                <div style="font-size: 4rem; font-weight: bold; color: var(--primary);" class="animate-pulse">3</div>
-                <div class="text-sm text-muted">Retry #2</div>
-              </div>
-              <div class="flex gap-4">
-                <div class="retry-box active"><svg style="width: 20px; height: 20px; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 1</span></div>
-                <div class="retry-box active"><svg class="animate-spin" style="width: 20px; height: 20px; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 2</span></div>
-                <div class="retry-box"><svg style="width: 20px; height: 20px; color: var(--muted-foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 3</span></div>
-              </div>
-            </div>
-          </div>
-        `,
-        resolved: `
-          <div class="vis-content">
-            <div class="flex flex-col items-center gap-8">
-              <div class="countdown-circle success">
-                <svg class="animate-bounce" style="width: 64px; height: 64px; color: var(--green);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                <div style="font-size: 1.25rem; font-weight: bold; color: var(--green); margin-top: 0.5rem;">Success!</div>
-              </div>
-              <div class="flex gap-4">
-                <div class="retry-box active"><svg style="width: 20px; height: 20px; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 1</span></div>
-                <div class="retry-box active"><svg style="width: 20px; height: 20px; color: var(--primary);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg><span class="text-xs text-muted mt-1">Retry 2</span></div>
-                <div class="retry-box success"><svg style="width: 20px; height: 20px; color: var(--green);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg><span class="text-xs text-muted mt-1">Done</span></div>
-              </div>
-            </div>
-          </div>
-        `
-      },
       'request-storm': {
         chaos: `
           <div class="vis-content">
@@ -1801,8 +1093,8 @@
                   </div>
                 `).join('')}
                 <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center;">
-                  <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">8</div>
-                  <div class="text-xs text-muted">requests</div>
+                  <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">N</div>
+                  <div class="text-xs text-muted">same-key calls</div>
                 </div>
               </div>
               <div style="font-size: 2rem; color: var(--primary);">→</div>
@@ -1825,8 +1117,8 @@
             <div class="flex items-center gap-8">
               <div class="relative" style="width: 160px; height: 250px;">
                 <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center;">
-                  <div style="font-size: 2rem; font-weight: bold; color: var(--destructive); text-decoration: line-through; opacity: 0.5;">8</div>
-                  <div class="text-xs text-muted">requests</div>
+                  <div style="font-size: 2rem; font-weight: bold; color: var(--destructive); text-decoration: line-through; opacity: 0.5;">N</div>
+                  <div class="text-xs text-muted">same-key calls</div>
                 </div>
               </div>
               <div style="font-size: 2rem; color: var(--primary);">→</div>
@@ -1849,8 +1141,8 @@
             <div class="flex items-center gap-8">
               <div class="relative" style="width: 160px; height: 250px;">
                 <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center;">
-                  <div style="font-size: 2rem; font-weight: bold; color: var(--destructive); text-decoration: line-through; opacity: 0.5;">8</div>
-                  <div class="text-xs text-muted">requests</div>
+                  <div style="font-size: 2rem; font-weight: bold; color: var(--destructive); text-decoration: line-through; opacity: 0.5;">N</div>
+                  <div class="text-xs text-muted">same-key calls</div>
                 </div>
               </div>
               <div style="font-size: 2rem; color: var(--green);">→</div>
@@ -1863,7 +1155,7 @@
                 <div style="width: 80px; height: 80px; border-radius: 1rem; border: 2px solid var(--green); background: rgba(74, 222, 128, 0.2); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(74, 222, 128, 0.4);">
                   <div style="font-size: 2rem; font-weight: bold; color: var(--green);">1</div>
                 </div>
-                <span class="text-xs text-muted mt-2">request</span>
+                <span class="text-xs text-muted mt-2">upstream owner</span>
               </div>
             </div>
           </div>
@@ -1876,17 +1168,17 @@
               <div class="flex items-center gap-4">
                 <svg style="width: 64px; height: 64px; color: var(--destructive);" class="animate-shake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                 <div>
-                  <div class="text-destructive font-bold text-2xl">$150.00</div>
-                  <div class="text-sm text-muted">Current spending</div>
+                  <div class="text-destructive font-bold text-2xl">Estimate</div>
+                  <div class="text-sm text-muted">Above configured cap</div>
                 </div>
               </div>
               <div style="position: relative;">
                 <div class="budget-meter">
                   <div class="budget-fill" style="width: 100%;"></div>
                 </div>
-                <div class="budget-limit" style="left: 66%;">Budget: $100</div>
+                <div class="budget-limit" style="left: 66%;">Hard cap</div>
               </div>
-              <div class="text-destructive font-semibold animate-pulse">⚠️ Budget exceeded by $50!</div>
+              <div class="text-destructive font-semibold animate-pulse">⚠️ Estimate exceeds the hard cap</div>
             </div>
           </div>
         `,
@@ -1896,17 +1188,17 @@
               <div class="flex items-center gap-4">
                 <svg style="width: 64px; height: 64px; color: var(--primary);" class="animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2h0V5z"></path><path d="M2 9v1c0 1.1.9 2 2 2h1"></path><path d="M16 11h0"></path></svg>
                 <div>
-                  <div class="text-primary font-bold text-2xl">Analyzing...</div>
-                  <div class="text-sm text-muted">Applying budget protection</div>
+                  <div class="text-primary font-bold text-2xl">Evaluating...</div>
+                  <div class="text-sm text-muted">Applying configured policy</div>
                 </div>
               </div>
               <div style="position: relative;">
                 <div class="budget-meter" style="border-color: var(--primary);">
                   <div class="budget-fill" style="width: 66%; transition: width 1s;"></div>
                 </div>
-                <div class="budget-limit" style="left: 66%;">Budget: $100</div>
+                <div class="budget-limit" style="left: 66%;">Configured cap</div>
               </div>
-              <div class="text-primary font-semibold">🛡️ ReliAPI protecting your budget...</div>
+              <div class="text-primary font-semibold">Checking the estimate before the provider call...</div>
             </div>
           </div>
         `,
@@ -1916,17 +1208,17 @@
               <div class="flex items-center gap-4">
                 <svg style="width: 64px; height: 64px; color: var(--green);" class="animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 <div>
-                  <div class="text-green font-bold text-2xl">$99.50</div>
-                  <div class="text-sm text-muted">Budget protected!</div>
+                  <div class="text-green font-bold text-2xl">Rejected</div>
+                  <div class="text-sm text-muted">Provider call not started</div>
                 </div>
               </div>
               <div style="position: relative;">
                 <div class="budget-meter" style="border-color: var(--green); box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);">
                   <div class="budget-fill" style="width: 66%; background: var(--green);"></div>
                 </div>
-                <div class="budget-limit" style="left: 66%; color: var(--green);">Budget: $100 ✓</div>
+                <div class="budget-limit" style="left: 66%; color: var(--green);">Hard cap ✓</div>
               </div>
-              <div class="text-green font-semibold">✅ Saved $50.50 by caching & deduplication!</div>
+              <div class="text-green font-semibold">Hard-cap rejection is returned in response metadata</div>
             </div>
           </div>
         `
@@ -1967,7 +1259,7 @@
         visualization.className = 'visualization-area processing';
         visContent.innerHTML = scenarios[scenario].processing;
         phaseBadge.className = 'phase-badge processing';
-        phaseBadge.innerHTML = '<svg class="animate-spin" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> ReliAPI handling it';
+        phaseBadge.innerHTML = '<svg class="animate-spin" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> Illustrative flow';
       }, 2000);
       
       // Resolved phase
@@ -1975,7 +1267,7 @@
         visualization.className = 'visualization-area resolved';
         visContent.innerHTML = scenarios[scenario].resolved;
         phaseBadge.className = 'phase-badge resolved';
-        phaseBadge.innerHTML = '<svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Problem solved';
+        phaseBadge.innerHTML = '<svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Illustration complete';
       }, 4000);
     }
     
@@ -1983,15 +1275,14 @@
       btn.addEventListener('click', () => runScenario(btn.dataset.scenario));
     });
     
-    // Auto-activate Provider Errors when section comes into view
+    // Auto-activate the LLM idempotency example when the section comes into view
     const featuresSection = document.querySelector('.section.section-bg');
     const featuresObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && !activeScenario) {
-          // Auto-activate Provider Errors scenario
-          const providerErrorsBtn = document.querySelector('[data-scenario="provider-errors"]');
-          if (providerErrorsBtn) {
-            runScenario('provider-errors');
+          const idempotencyBtn = document.querySelector('[data-scenario="request-storm"]');
+          if (idempotencyBtn) {
+            runScenario('request-storm');
           }
           // Unobserve after activation
           featuresObserver.unobserve(entry.target);
@@ -2003,55 +1294,25 @@
       featuresObserver.observe(featuresSection);
     }
     
-    // Animate stats on scroll
-    const statsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          document.getElementById('stat-error-direct').style.width = '20%';
-          document.getElementById('stat-error-reli').style.width = '1%';
-          document.getElementById('stat-cost-direct').style.width = '30%';
-          document.getElementById('stat-cost-reli').style.width = '2%';
-          document.getElementById('stat-cache-direct').style.width = '15%';
-          document.getElementById('stat-cache-reli').style.width = '68%';
-          
-          setTimeout(() => {
-            document.getElementById('latency-helicone').style.width = '100%';
-          }, 500);
-          setTimeout(() => {
-            document.getElementById('latency-litellm').style.width = '75%';
-          }, 650);
-          setTimeout(() => {
-            document.getElementById('latency-portkey').style.width = '62%';
-          }, 800);
-          setTimeout(() => {
-            document.getElementById('latency-reliapi').style.width = '37%';
-          }, 950);
-        }
-      });
-    }, { threshold: 0.2 });
-    
-    document.querySelectorAll('.stat-card').forEach(card => statsObserver.observe(card));
-    document.querySelectorAll('.latency-bar').forEach(bar => statsObserver.observe(bar));
-    
     // Code Examples
     const codeExamples = {
       python: `import requests
 
 response = requests.post(
-    "https://reliapi.kikuai.dev/proxy/llm",
+    "http://localhost:8000/v1/proxy/llm",
     headers={
         "X-API-Key": "YOUR_API_KEY",
         "X-Idempotency-Key": "unique-request-id"
     },
     json={
         "target": "openai",
-        "model": "gpt-4",
+        "model": "gpt-4o-mini",
         "messages": [{"role": "user", "content": "Hello!"}]
     }
 )
 
 print(response.json())`,
-      javascript: `const response = await fetch("https://reliapi.kikuai.dev/proxy/llm", {
+      javascript: `const response = await fetch("http://localhost:8000/v1/proxy/llm", {
   method: "POST",
   headers: {
     "X-API-Key": "YOUR_API_KEY",
@@ -2060,20 +1321,20 @@ print(response.json())`,
   },
   body: JSON.stringify({
     target: "openai",
-    model: "gpt-4",
+    model: "gpt-4o-mini",
     messages: [{ role: "user", content: "Hello!" }]
   })
 });
 
 const data = await response.json();
 console.log(data);`,
-      curl: `curl -X POST https://reliapi.kikuai.dev/proxy/llm \\
+      curl: `curl -X POST http://localhost:8000/v1/proxy/llm \\
   -H "X-API-Key: YOUR_API_KEY" \\
   -H "X-Idempotency-Key: unique-request-id" \\
   -H "Content-Type: application/json" \\
   -d '{
     "target": "openai",
-    "model": "gpt-4",
+    "model": "gpt-4o-mini",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'`
     };

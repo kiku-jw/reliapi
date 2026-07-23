@@ -1,6 +1,7 @@
 # ReliAPI
 
-Reliability layer for API calls: retries, caching, dedup, circuit breakers.
+Beta self-hosted proxy for HTTP and LLM calls with Redis-backed caching,
+non-streaming LLM idempotency, and configurable LLM budget guardrails.
 
 [![npm version](https://badge.fury.io/js/reliapi-sdk.svg)](https://www.npmjs.com/package/reliapi-sdk)
 [![PyPI version](https://badge.fury.io/py/reliapi-sdk.svg)](https://pypi.org/project/reliapi-sdk/)
@@ -8,17 +9,20 @@ Reliability layer for API calls: retries, caching, dedup, circuit breakers.
 
 **[Open the project site](https://kikuai-lab.github.io/reliapi/)**
 
+> [!IMPORTANT]
+> ReliAPI is beta software for evaluation and self-hosting. It does not provide
+> an SLA, managed multi-upstream fallback, exactly-once delivery, quantified
+> savings, or published performance targets.
+
 ## Features
 
-- **Retries with Backoff** - Automatic retries with exponential backoff
-- **Circuit Breaker** - Prevent cascading failures
-- **Caching** - TTL cache for GET requests and LLM responses
-- **Idempotency** - Request coalescing with idempotency keys
-- **Rate Limiting** - Built-in rate limiting per tier
-- **LLM Proxy** - Unified interface for OpenAI, Anthropic, Mistral
-- **Cost Control** - Budget caps and cost estimation
-- **Self-Service Onboarding** - Automated API key generation
-- **Paddle Payments** - Subscription management
+- **Caching** - TTL cache for HTTP GET/HEAD and non-streaming LLM responses
+- **Idempotency** - Redis-backed primitives used by the non-streaming LLM path
+- **LLM Proxy** - Configured OpenAI, Anthropic, and Mistral targets
+- **Budget Guardrails** - Pre-request estimates with hard and soft caps
+- **Rate Limiting** - Built-in request limits per configured tier
+- **Experimental Resilience** - Retry and circuit-breaker code remains under
+  beta review and is not part of the documented reliability baseline
 
 ## Project Structure
 
@@ -50,10 +54,14 @@ Try ReliAPI directly on [RapidAPI](https://rapidapi.com/kikuai-lab-kikuai-lab-de
 ### Self-Hosting with Docker
 
 ```bash
-docker run -d -p 8000:8000 \
-  -e REDIS_URL="redis://localhost:6379/0" \
-  -e RELIAPI_CONFIG_PATH=/app/config.yaml \
-  kikudoc/reliapi:latest
+git clone https://github.com/KikuAI-Lab/reliapi.git
+cd reliapi
+cp .env.example .env
+
+# Add the provider key(s) referenced by config.yaml to .env, then start
+# ReliAPI and its Redis service.
+docker compose up -d --build
+curl http://localhost:8000/healthz
 ```
 
 ### Local Development
@@ -109,8 +117,8 @@ targets:
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/proxy/http` | POST | Proxy any HTTP API with reliability |
-| `/proxy/llm` | POST | Proxy LLM requests with cost control |
+| `/v1/proxy/http` | POST | Proxy a request to a configured HTTP target |
+| `/v1/proxy/llm` | POST | Proxy a request to a configured LLM target |
 | `/healthz` | GET | Health check |
 | `/metrics` | GET | Prometheus metrics |
 
@@ -160,7 +168,7 @@ PADDLE_ENVIRONMENT=sandbox
 from reliapi_sdk import ReliAPI
 
 client = ReliAPI(
-    base_url="https://reliapi.kikuai.dev",
+    base_url="http://localhost:8000",
     api_key="your-api-key"
 )
 
@@ -187,7 +195,7 @@ llm_response = client.proxy_llm(
 import { ReliAPI } from 'reliapi-sdk';
 
 const client = new ReliAPI({
-  baseUrl: 'https://reliapi.kikuai.dev',
+  baseUrl: 'http://localhost:8000',
   apiKey: 'your-api-key'
 });
 
@@ -197,6 +205,20 @@ const response = await client.proxyLlm({
   messages: [{ role: 'user', content: 'Hello!' }]
 });
 ```
+
+## Beta Limitations
+
+- Redis must be reachable for shared cache and idempotency behavior.
+- HTTP response caching applies to GET and HEAD; LLM caching applies to the
+  non-streaming path.
+- The documented idempotency baseline covers non-streaming LLM calls. HTTP
+  idempotency and streaming behavior remain under beta review.
+- Idempotency is not a promise of exactly-once upstream execution or provider
+  billing behavior.
+- Budget caps use pre-request estimates, not authoritative invoices or
+  account-wide spending limits.
+- Deployment security, target allow-lists, Redis durability, observability, and
+  provider quotas remain the self-hosting operator's responsibility.
 
 ## Testing
 
@@ -222,7 +244,8 @@ See [`docs/release.md`](./docs/release.md) and [`docs/SECRETS_SETUP.md`](./docs/
 
 - [OpenAPI Spec](./openapi/openapi.yaml)
 - [Postman Collection](./postman/collection.json)
-- [Live Docs](https://reliapi.kikuai.dev/docs)
+- [Project Site](https://kikuai-lab.github.io/reliapi/)
+- [Wiki](https://github.com/KikuAI-Lab/reliapi/wiki)
 
 ## Support
 
